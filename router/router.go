@@ -17,6 +17,7 @@ type Router struct {
 // 路由定义结构
 var Routers []Router = []Router{}
 
+// 初始化加载路由
 func init() {
 	Routers = append(Routers, Router{
 		Method:     http.MethodGet,

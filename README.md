@@ -5,6 +5,7 @@ Golang的项目开发骨架
 ## web-layout Web项目骨架
 
 * `/bin` 主要存放编译后文件
+* `/config` 配置处理
 * `/bootstrap/bootstrap.go` 项目启动文件，其中包括初始化操作，如环境配置，启动服务，注册路由等等
 * `database` 数据库连接创建的文件
 * `handler` 处理`http`请求和返回，相当于**MVC**的**Controller**

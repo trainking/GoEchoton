@@ -1,8 +1,10 @@
 package bootstrap
 
 import (
+	. "GoEchoton/config"
 	"GoEchoton/middleware"
 	"GoEchoton/router"
+	"fmt"
 
 	"github.com/labstack/echo/v4"
 )
@@ -21,7 +23,7 @@ func (s *Server) Start() {
 	for _, r := range s.routers {
 		s.e.Add(r.Method, r.Path, r.Handler, r.Middlwares...)
 	}
-	s.e.Logger.Fatal(s.e.Start(":1323"))
+	s.e.Logger.Fatal(s.e.Start(fmt.Sprintf(":%d", Config.Server.Port)))
 }
 
 // 创建一个Server
