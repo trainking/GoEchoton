@@ -14,8 +14,17 @@ type Router struct {
 	Middlwares []echo.MiddlewareFunc
 }
 
+type Group struct {
+	Path       string
+	Middlwares []echo.MiddlewareFunc
+	Routers    []Router
+}
+
 // 路由定义结构
 var Routers []Router = []Router{}
+
+// 分组路由
+var Groups []Group = []Group{}
 
 // 初始化加载路由
 func init() {
