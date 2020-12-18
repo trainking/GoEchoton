@@ -21,7 +21,7 @@ func Online() echo.MiddlewareFunc {
 					Internal: nil,
 				}
 			}
-			return nil
+			return next(c)
 		}
 	}
 }
