@@ -5,9 +5,9 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
-	"github.com/labstack/echo/v4/middleware"
 )
 
+// Online 在线状态中间件
 func Online() echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
@@ -24,12 +24,4 @@ func Online() echo.MiddlewareFunc {
 			return next(c)
 		}
 	}
-}
-
-// 全局使用的中间件
-var Mfuns []echo.MiddlewareFunc = []echo.MiddlewareFunc{}
-
-func init() {
-	Mfuns = append(Mfuns, middleware.Logger())
-	Mfuns = append(Mfuns, middleware.Recover())
 }
