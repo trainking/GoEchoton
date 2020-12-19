@@ -19,12 +19,26 @@ func Index(c echo.Context) error {
 	})
 }
 
+// 登录传参数结构体
+type Login_json struct {
+	Username string
+	Password string
+}
+
+// 验证账号和密码
+func (l *Login_json) valid() (bool, error) {
+	if l.Username != "jon" || l.Password != "hahha" {
+		return false, nil
+	}
+	return true, nil
+}
+
 // 登陆
 func Login(c echo.Context) error {
-	username := c.FormValue("username")
-	password := c.FormValue("password")
-	// 判断用户名和密码是否一致
-	if username != "jon" || password != "hahha" {
+	var param Login_json
+	c.Bind(&param)
+	_r, err := param.valid()
+	if !_r {
 		return echo.ErrUnauthorized
 	}
 	token := jwt.New(jwt.SigningMethodHS256)
@@ -37,7 +51,7 @@ func Login(c echo.Context) error {
 		return err
 	}
 	op := repository.NewHauthorizedOP()
-	err = op.Save(username, "Bearer "+t)
+	err = op.Save(param.Username, "Bearer "+t)
 	if err != nil {
 		return err
 	}
