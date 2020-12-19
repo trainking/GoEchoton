@@ -1,10 +1,10 @@
-package conf
+package config
 
 import (
 	"io/ioutil"
 	"os"
 
-	"gopkg.in/yaml.v3"
+	"gopkg.in/yaml.v2"
 )
 
 type Yml struct {
@@ -17,9 +17,12 @@ type Yml struct {
 		Host   string `yaml:"host"`
 		Port   int    `yaml:"port"`
 	}
+	Server struct {
+		Port int `yaml:"port"`
+	}
 }
 
-var Conf Yml
+var Config Yml
 
 func init() {
 	path, _ := os.Getwd() // 获取到的是项目根路径 GoEchoton/
@@ -27,7 +30,7 @@ func init() {
 	if err != nil {
 		panic("Load Env yaml Failed")
 	}
-	err = yaml.Unmarshal(yamlFile, &Conf)
+	err = yaml.Unmarshal(yamlFile, &Config)
 	if err != nil {
 		panic("Unmarshal: " + err.Error())
 	}
