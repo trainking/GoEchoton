@@ -3,11 +3,13 @@ package handler
 import (
 	"GoEchoton/config"
 	"GoEchoton/repository"
+	"context"
 	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	"github.com/go-redis/redis/v8"
 	"github.com/labstack/echo/v4"
 )
 
@@ -25,9 +27,27 @@ type Login_json struct {
 	Password string
 }
 
+var ctx = context.Background()
+
 // 验证账号和密码
 func (l *Login_json) valid() (bool, error) {
-	if l.Username != "jon" || l.Password != "hahha" {
+	rdb := redis.NewClient(&redis.Options{
+		Addr:     "121.4.65.13:6379",
+		Password: "y123456", // no password set
+		DB:       0,         // use default DB
+	})
+	var username string
+	var password string
+	var err error
+	username, err = rdb.Get(ctx, "username").Result()
+	if err != nil {
+		return false, err
+	}
+	password, err = rdb.Get(ctx, "password").Result()
+	if err != nil {
+		return false, err
+	}
+	if l.Username != username || l.Password != password {
 		return false, nil
 	}
 	return true, nil
