@@ -7,6 +7,7 @@ import (
 	"gopkg.in/yaml.v2"
 )
 
+// Yml 配置文件映射结构体
 type Yml struct {
 	Jwt struct {
 		Secret string `yaml:"secret"`
@@ -20,8 +21,14 @@ type Yml struct {
 	Server struct {
 		Port int `yaml:"port"`
 	}
+	Redis struct {
+		Host   string `yaml:"host"`
+		Passwd string `yaml:"passwd"`
+		DB     int    `yaml:"db"`
+	}
 }
 
+// 配置
 var Config Yml
 
 func init() {
