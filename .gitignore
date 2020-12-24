@@ -15,3 +15,5 @@
 # vendor/
 
 env.yaml
+
+test/env.yaml
