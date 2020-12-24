@@ -3,60 +3,32 @@ package handler
 import (
 	. "GoEchoton/config"
 	"GoEchoton/repository"
-	"context"
-	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/go-redis/redis/v8"
 	"github.com/labstack/echo/v4"
 )
 
 // Index 首页Index
 func Index(c echo.Context) error {
-	fmt.Print("sss")
 	return c.JSON(http.StatusOK, map[string]string{
 		"say": "hello, world!",
 	})
 }
 
-// Login_json 登录传参数结构体
-type Login_json struct {
-	Username string
-	Password string
-}
-
-// valid 验证账号和密码
-func (l *Login_json) valid() (bool, error) {
-	var ctx = context.Background()
-	rdb := redis.NewClient(&redis.Options{
-		Addr:     Config.Redis.Host,
-		Password: Config.Redis.Passwd,
-		DB:       Config.Redis.DB,
-	})
-	var username string
-	var password string
-	var err error
-	username, err = rdb.Get(ctx, "username").Result()
-	if err != nil {
-		return false, err
-	}
-	password, err = rdb.Get(ctx, "password").Result()
-	if err != nil {
-		return false, err
-	}
-	if l.Username != username || l.Password != password {
-		return false, nil
-	}
-	return true, nil
-}
-
 // Login 登陆
 func Login(c echo.Context) error {
-	var param Login_json
+	var param struct {
+		Username string
+		Password string
+	}
 	c.Bind(&param)
-	_r, err := param.valid()
+	userop := repository.NewUserOP()
+	_r, err := userop.Valid(param.Username, param.Password)
+	if err != nil {
+		return err
+	}
 	if !_r {
 		return echo.ErrUnauthorized
 	}
