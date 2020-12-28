@@ -12,16 +12,22 @@ import (
 	"go.mongodb.org/mongo-driver/mongo"
 )
 
-// Hauthorized_OP 验证操作
-type Hauthorized_OP interface {
-	Save(username, t string) error
-	Check(t string) bool
-}
+type (
 
-// hauthorized_op op实现
-type hauthorized_op struct {
-	collection *mongo.Collection
-}
+	// Hauthorized_OP 验证操作
+	Hauthorized_OP interface {
+
+		// Save 保存数据
+		Save(username, t string) error
+
+		// Check 检查
+		Check(t string) bool
+	}
+
+	hauthorized_op struct {
+		collection *mongo.Collection
+	}
+)
 
 // Save 保存数据
 func (op *hauthorized_op) Save(username, t string) error {

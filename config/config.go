@@ -26,6 +26,14 @@ type Yml struct {
 		Passwd string `yaml:"passwd"`
 		DB     int    `yaml:"db"`
 	}
+	Mysql struct {
+		User     string `yaml:"user"`
+		Passwd   string `yaml:"passwd"`
+		Network  string `yaml:"network"`
+		Host     string `yaml:"host"`
+		Port     int    `yaml:"port"`
+		Database string `yaml:"database"`
+	}
 }
 
 // 配置
