@@ -2,6 +2,7 @@ package handler
 
 import (
 	. "GoEchoton/config"
+	"GoEchoton/model/param"
 	"GoEchoton/repository"
 	"net/http"
 	"time"
@@ -19,13 +20,10 @@ func Index(c echo.Context) error {
 
 // Login 登陆
 func Login(c echo.Context) error {
-	var param struct {
-		Username string
-		Password string
-	}
-	c.Bind(&param)
+	var params param.LoginUser
+	c.Bind(&params)
 	userop := repository.NewUserOP()
-	_r, err := userop.Valid(param.Username, param.Password)
+	_r, err := userop.Valid(params.Username, params.Password)
 	if err != nil {
 		return err
 	}
@@ -45,7 +43,7 @@ func Login(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	err = op.Save(param.Username, "Bearer "+t)
+	err = op.Save(params.Username, "Bearer "+t)
 	if err != nil {
 		return err
 	}
