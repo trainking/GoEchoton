@@ -17,6 +17,9 @@ type (
 	// Hauthorized_OP 验证操作
 	Hauthorized_OP interface {
 
+		// 继承公有接口
+		Repository
+
 		// Save 保存数据
 		Save(username, t string) error
 
@@ -53,6 +56,11 @@ func (op *hauthorized_op) Check(t string) bool {
 		return false
 	}
 	return true
+}
+
+// Destory
+func (op *hauthorized_op) Destory() error {
+	return nil
 }
 
 // NewHauthorizedOP 创建操作接口
