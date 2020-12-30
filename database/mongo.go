@@ -13,48 +13,55 @@ import (
 
 // MongoDB mongoDB结构体
 type MongoDB struct {
-	client *mongo.Client
+	uri string
+	mu  sync.Mutex
 }
 
-var initialized uint32
-
-var instance *MongoDB
-
-var mu sync.Mutex
+var (
+	initialized uint32
+	instance    *mongo.Client
+)
 
 // GetCollection 获取集合
-func (m *MongoDB) GetCollection(database, collectionName string) *mongo.Collection {
-	return m.client.Database(database).Collection(collectionName)
+func (m *MongoDB) GetCollection(database, collectionName string) (*mongo.Collection, error) {
+	client, err := m.getClient()
+	if err != nil {
+		return nil, err
+	}
+	return client.Database(database).Collection(collectionName), nil
+}
+
+// getClient 获取client
+func (m *MongoDB) getClient() (*mongo.Client, error) {
+	if atomic.LoadUint32(&initialized) == 1 {
+		return instance, nil
+	}
+
+	m.mu.Lock()
+	defer m.mu.Unlock()
+
+	var clientOptions = options.Client().ApplyURI(m.uri)
+	var err error
+	c, err := mongo.Connect(context.TODO(), clientOptions)
+	if err != nil {
+		return nil, err
+	}
+	atomic.StoreUint32(&initialized, 1)
+	instance = c
+	return instance, nil
 }
 
 // Destory 重置
 func (m *MongoDB) Destory() {
-	mu.Lock()
-	defer mu.Unlock()
+	m.mu.Lock()
+	defer m.mu.Unlock()
 	instance = nil
 	atomic.StoreUint32(&initialized, 0)
 }
 
 // NewMongoDB 新获取一个MongoDB连接
-func NewMongoDB() (*MongoDB, error) {
+func NewMongoDB() *MongoDB {
+	uri := fmt.Sprintf("mongodb://%s:%s@%s:%d", Config.Mongo.User, Config.Mongo.Passwd, Config.Mongo.Host, Config.Mongo.Port)
 
-	if atomic.LoadUint32(&initialized) == 1 {
-		return instance, nil
-	}
-
-	mu.Lock()
-	defer mu.Unlock()
-
-	if initialized == 0 {
-		uri := fmt.Sprintf("mongodb://%s:%s@%s:%d", Config.Mongo.User, Config.Mongo.Passwd, Config.Mongo.Host, Config.Mongo.Port)
-		var clientOptions = options.Client().ApplyURI(uri)
-		var err error
-		c, err := mongo.Connect(context.TODO(), clientOptions)
-		if err != nil {
-			return nil, err
-		}
-		instance = &MongoDB{client: c}
-		atomic.StoreUint32(&initialized, 1)
-	}
-	return instance, nil
+	return &MongoDB{uri: uri}
 }
