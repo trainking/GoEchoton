@@ -34,7 +34,6 @@ type (
 
 // Save 保存数据
 func (op *hauthorized_op) Save(username, t string) error {
-	// collection := op.mongoClient.Database("local").Collection("hauthorized")
 	h := model.Hauthorized{Username: username, Tott: crc32.ChecksumIEEE([]byte(t)), Date: time.Now()}
 	_, err := op.collection.InsertOne(context.TODO(), h)
 	if err != nil {
@@ -46,7 +45,6 @@ func (op *hauthorized_op) Save(username, t string) error {
 // Check 检查
 func (op *hauthorized_op) Check(t string) bool {
 	var result model.Hauthorized
-	// collection := op.mongoClient.Database("local").Collection("hauthorized")
 	filter := bson.D{primitive.E{Key: "tott", Value: crc32.ChecksumIEEE([]byte(t))}}
 	err := op.collection.FindOne(context.TODO(), filter).Decode(&result)
 	if err != nil {
@@ -65,11 +63,12 @@ func (op *hauthorized_op) Destory() error {
 
 // NewHauthorizedOP 创建操作接口
 func NewHauthorizedOP() (Hauthorized_OP, error) {
-	m, err := database.NewMongoDB()
+	m := database.NewMongoDB()
+	collection, err := m.GetCollection(model.HauthorizedDatabase, model.HauthorizedCollection)
 	if err != nil {
 		return nil, err
 	}
 	return &hauthorized_op{
-		collection: m.GetCollection(model.HauthorizedDatabase, model.HauthorizedCollection),
+		collection: collection,
 	}, nil
 }
