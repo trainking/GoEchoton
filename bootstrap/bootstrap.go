@@ -20,6 +20,9 @@ func (s *Server) Start() {
 	// 全局中间件
 	s.e.Use(middleware.Logger())
 	s.e.Use(middleware.Recover())
+
+	// 字段验证器
+	s.e.Validator = NewStructValidator()
 	// 无组路由
 	for _, r := range s.routers {
 		r.Add(s.e)

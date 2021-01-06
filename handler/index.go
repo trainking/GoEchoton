@@ -1,9 +1,9 @@
 package handler
 
 import (
-	"GoEchoton/config"
+	. "GoEchoton/config"
+	"GoEchoton/model/param"
 	"GoEchoton/repository"
-	"fmt"
 	"net/http"
 	"time"
 
@@ -11,20 +11,27 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-// 首页Index
-func Index(c echo.Context) error {
-	fmt.Print("sss")
+type user struct{}
+
+var User = user{}
+
+// Index 首页Index
+func (_ user) Index(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{
 		"say": "hello, world!",
 	})
 }
 
-// 登陆
-func Login(c echo.Context) error {
-	username := c.FormValue("username")
-	password := c.FormValue("password")
-	// 判断用户名和密码是否一致
-	if username != "jon" || password != "hahha" {
+// Login 登陆
+func (_ user) Login(c echo.Context) error {
+	var params param.LoginUser
+	c.Bind(&params)
+	userop := repository.NewUserOP()
+	_r, err := userop.Valid(params.Username, params.Password)
+	if err != nil {
+		return err
+	}
+	if !_r {
 		return echo.ErrUnauthorized
 	}
 	token := jwt.New(jwt.SigningMethodHS256)
@@ -32,12 +39,15 @@ func Login(c echo.Context) error {
 	claims["name"] = "Jon Snow"
 	claims["admin"] = true
 	claims["exp"] = time.Now().Add(time.Hour * 72).Unix()
-	t, err := token.SignedString([]byte(config.Config.Jwt.Secret))
+	t, err := token.SignedString([]byte(Config.Jwt.Secret))
 	if err != nil {
 		return err
 	}
-	op := repository.NewHauthorizedOP()
-	err = op.Save(username, "Bearer "+t)
+	op, err := repository.NewHauthorizedOP()
+	if err != nil {
+		return err
+	}
+	err = op.Save(params.Username, "Bearer "+t)
 	if err != nil {
 		return err
 	}
