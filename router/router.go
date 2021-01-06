@@ -9,16 +9,14 @@ import (
 func init() {
 	Routers = append(Routers, []Router{
 		{
-			Method:     http.MethodGet,
-			Path:       "/",
-			Handler:    handler.Index,
-			Middlwares: nil,
+			Method:  http.MethodGet,
+			Path:    "/",
+			Handler: handler.User.Index,
 		},
 		{
-			Method:     http.MethodPost,
-			Path:       "/login",
-			Handler:    handler.Login,
-			Middlwares: nil,
+			Method:  http.MethodPost,
+			Path:    "/login",
+			Handler: handler.User.Login,
 		},
 	}...)
 }

@@ -11,15 +11,19 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+type user struct{}
+
+var User = user{}
+
 // Index 首页Index
-func Index(c echo.Context) error {
+func (_ user) Index(c echo.Context) error {
 	return c.JSON(http.StatusOK, map[string]string{
 		"say": "hello, world!",
 	})
 }
 
 // Login 登陆
-func Login(c echo.Context) error {
+func (_ user) Login(c echo.Context) error {
 	var params param.LoginUser
 	c.Bind(&params)
 	userop := repository.NewUserOP()
