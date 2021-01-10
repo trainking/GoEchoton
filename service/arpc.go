@@ -60,6 +60,10 @@ func (this *ArpcPool) Close() {
 
 // Release 释放资源，放回池中
 func (this *ArpcPool) Release(c *arpc.Client) {
+	if err := c.CheckState(); err != nil {
+		// 检查Client的状态
+		return
+	}
 	this.mu.Lock()
 	defer this.mu.Unlock()
 
@@ -74,6 +78,7 @@ func (this *ArpcPool) Release(c *arpc.Client) {
 		// 放回池中
 	default:
 		// 池子满了的情况
+		c.Stop()
 	}
 }
 
