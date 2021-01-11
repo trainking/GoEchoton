@@ -22,7 +22,7 @@ func init() {
 			{
 				Method:     http.MethodGet,
 				Path:       "/index",
-				Handler:    handler.Index,
+				Handler:    handler.User.Index,
 				Middlwares: nil,
 			},
 		},

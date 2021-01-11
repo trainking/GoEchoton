@@ -7,6 +7,7 @@ require (
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/go-redis/redis/v8 v8.4.4
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/json-iterator/go v1.1.10
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/lesismal/arpc v1.1.0
 	go.mongodb.org/mongo-driver v1.4.4
