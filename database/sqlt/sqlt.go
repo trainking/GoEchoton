@@ -15,7 +15,7 @@ type InsertSQL struct {
 }
 
 // Add 增加数据
-func (this *InsertSQL) Add(col string, v interface{}) {
+func (this *InsertSQL) Add(col string, v interface{}) *InsertSQL {
 	this.Data = append(this.Data, v)
 	if this.cbuff.Len() != 0 {
 		this.cbuff.WriteByte(',')
@@ -25,8 +25,17 @@ func (this *InsertSQL) Add(col string, v interface{}) {
 	if this.vbuff.Len() != 0 {
 		this.vbuff.WriteByte(',')
 	}
-	this.vbuff.WriteByte('$')
-	this.vbuff.WriteString(strconv.Itoa(len(this.Data)))
+	this.vbuff.WriteByte('?')
+	
+	return this
+}
+
+// AddMany 批量增加
+func (this *InsertSQL) AddMany(cols map[string]interface{}) *InsertSQL {
+	for k,v := range cols {
+		this.Add(k, v)
+	}
+	return this
 }
 
 // Sql 获取sql语句
@@ -37,15 +46,4 @@ func (this *InsertSQL) Sql() string {
 // T 返回语句和数据
 func (this *InsertSQL) T() (string, []interface{}) {
 	return this.Sql(), this.Data
-}
-
-// UpdateSQL 更新语句
-type UpdateSQL struct {
-	Table string
-	// Data  []interface{}
-	vData []interface{}
-	wData []interface{}
-	cbuff bytes.Buffer
-	vbuff bytes.Buffer
-	wbuff bytes.Buffer
 }
