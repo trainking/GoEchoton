@@ -5,9 +5,11 @@ import (
 	"GoEchoton/model/param"
 	"GoEchoton/repository"
 	"net/http"
+	"reflect"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
+	jsoniter "github.com/json-iterator/go"
 	"github.com/labstack/echo/v4"
 )
 
@@ -17,8 +19,19 @@ var User = user{}
 
 // Index 首页Index
 func (_ user) Index(c echo.Context) error {
+	var json = jsoniter.ConfigCompatibleWithStandardLibrary
+	data := map[string]interface{}{
+		"state": 1,
+	}
+	d, err := json.Marshal(&data)
+	if err != nil {
+		return err
+	}
+	var p map[string]interface{}
+	json.Unmarshal(d, &p)
+	r := reflect.ValueOf(p["state"])
 	return c.JSON(http.StatusOK, map[string]string{
-		"say": "hello, world!",
+		"say": r.Kind().String(),
 	})
 }
 
