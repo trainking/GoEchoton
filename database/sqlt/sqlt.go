@@ -3,7 +3,6 @@ package sqlt
 import (
 	"bytes"
 	"fmt"
-	"strconv"
 )
 
 // InsertSQL 插入语句
@@ -26,13 +25,13 @@ func (this *InsertSQL) Add(col string, v interface{}) *InsertSQL {
 		this.vbuff.WriteByte(',')
 	}
 	this.vbuff.WriteByte('?')
-	
+
 	return this
 }
 
 // AddMany 批量增加
 func (this *InsertSQL) AddMany(cols map[string]interface{}) *InsertSQL {
-	for k,v := range cols {
+	for k, v := range cols {
 		this.Add(k, v)
 	}
 	return this
