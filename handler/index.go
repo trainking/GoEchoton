@@ -30,7 +30,7 @@ func (_ user) Index(c echo.Context) error {
 	var p map[string]interface{}
 	json.Unmarshal(d, &p)
 	r := reflect.ValueOf(p["state"])
-	return c.JSON(http.StatusOK, map[string]string{
+	return ResponseSucessfully(c, map[string]interface{}{
 		"say": r.Kind().String(),
 	})
 }
