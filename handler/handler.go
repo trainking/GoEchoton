@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/labstack/echo/v4"
+	jsoniter "github.com/json-iterator/go"
 )
 
 const (
@@ -40,4 +41,27 @@ func ErrorResponse(c echo.Context, msg string) error {
 // ExtResponse 自定义返回
 func ExtResponse(c echo.Context, r Resp) error {
 	return c.JSON(http.StatusOK, r)
+}
+
+// ResponseJsoniter 使用jsonIter 替换
+func ResponseJsoniter(c echo.Context, data ...interface{}) error {
+	if len(data) > 0 {
+		var json = jsoniter.Config{
+			EscapeHTML:                    false,
+			MarshalFloatWith6Digits:       true, // will lose precession
+			ObjectFieldMustBeSimpleString: true, // do not unescape object field
+			UseNumber:                     true,
+		}.Froze()
+		response := c.Response()
+		enc := json.NewEncoder(response)
+		enc.SetIndent("", "  ")
+		header := c.Response().Header()
+		if header.Get(echo.HeaderContentType) == "" {
+			header.Set(echo.HeaderContentType, echo.MIMEApplicationJSONCharsetUTF8)
+		}
+		response.Status = http.StatusOK
+		c.SetResponse(response)
+		return enc.Encode(data[0])
+	}
+	return c.JSON(extend.Response(http.StatusOK, 0, "ok"))
 }
