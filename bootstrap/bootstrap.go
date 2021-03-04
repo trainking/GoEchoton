@@ -1,7 +1,6 @@
 package bootstrap
 
 import (
-	. "GoEchoton/config"
 	"GoEchoton/router"
 	"fmt"
 
@@ -16,7 +15,7 @@ type Server struct {
 }
 
 // Start 启动服务
-func (s *Server) Start() {
+func (s *Server) Start(port int) {
 	// 全局中间件
 	s.e.Use(middleware.Logger())
 	s.e.Use(middleware.Recover())
@@ -31,7 +30,7 @@ func (s *Server) Start() {
 	for _, g := range router.Groups {
 		g.Add(s.e)
 	}
-	s.e.Logger.Fatal(s.e.Start(fmt.Sprintf(":%d", Config.Server.Port)))
+	s.e.Logger.Fatal(s.e.Start(fmt.Sprintf(":%d", port)))
 }
 
 // NewServer 创建一个Server
