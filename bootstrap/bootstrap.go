@@ -22,6 +22,8 @@ func (s *Server) Start(port int) {
 
 	// 字段验证器
 	s.e.Validator = NewStructValidator()
+	// Binder
+	s.e.Binder = NewJsoniterBinder()
 	// 无组路由
 	for _, r := range s.routers {
 		r.Add(s.e)
