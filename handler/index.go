@@ -4,7 +4,6 @@ import (
 	. "GoEchoton/config"
 	"GoEchoton/model/param"
 	"GoEchoton/repository"
-	"net/http"
 	"reflect"
 	"time"
 
@@ -30,7 +29,7 @@ func (_ user) Index(c echo.Context) error {
 	var p map[string]interface{}
 	json.Unmarshal(d, &p)
 	r := reflect.ValueOf(p["state"])
-	return ResponseSucessfully(c, map[string]interface{}{
+	return Response(c, map[string]interface{}{
 		"say": r.Kind().String(),
 	})
 }
@@ -64,7 +63,7 @@ func (_ user) Login(c echo.Context) error {
 	if err != nil {
 		return err
 	}
-	return c.JSON(http.StatusOK, map[string]string{
+	return Response(c, map[string]string{
 		"token": t,
 	})
 }
