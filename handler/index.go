@@ -4,6 +4,8 @@ import (
 	. "GoEchoton/config"
 	"GoEchoton/model/param"
 	"GoEchoton/repository"
+	"io"
+	"os"
 	"reflect"
 	"time"
 
@@ -66,4 +68,30 @@ func (_ user) Login(c echo.Context) error {
 	return Response(c, map[string]string{
 		"token": t,
 	})
+}
+
+// Upload 上传文件
+func Upload(c echo.Context) error {
+	file, err := c.FormFile("file")
+	if err != nil {
+		return err
+	}
+	src, err := file.Open()
+	if err != nil {
+		return err
+	}
+	defer src.Close()
+
+	// Destination
+	dst, err := os.Create(file.Filename)
+	if err != nil {
+		return err
+	}
+	defer dst.Close()
+
+	// Copy
+	if _, err = io.Copy(dst, src); err != nil {
+		return err
+	}
+	return nil
 }
