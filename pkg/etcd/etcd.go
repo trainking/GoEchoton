@@ -67,6 +67,32 @@ func (this *EtcdHttpClient) Put(key string, value string) error {
 	return nil
 }
 
+// Get
+func (this *EtcdHttpClient) Get(key string) (string, error) {
+	url := fmt.Sprintf("http://%s/v3/kv/range", this.Gateway)
+
+	req := &fasthttp.Request{}
+	req.SetRequestURI(url)
+
+	// Etcd 3 使用base64编码
+	key_base64 := base64.StdEncoding.EncodeToString([]byte(key))
+	requestBody := []byte(fmt.Sprintf(`{"key":"%s"}`, key_base64))
+	req.SetBody(requestBody)
+	req.Header.SetContentType("application/json")
+	req.Header.SetMethod("POST")
+
+	resp := &fasthttp.Response{}
+
+	client := &fasthttp.Client{}
+	if err := client.Do(req, resp); err != nil {
+		return "", err
+	}
+
+	b := resp.Body()
+	// TODO decode response
+	return string(b), nil
+}
+
 // NewHttpClient 创建客户端
 func NewHttpClient(etcdGateway string) *EtcdHttpClient {
 	return &EtcdHttpClient{Gateway: etcdGateway}

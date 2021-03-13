@@ -18,3 +18,12 @@ func TestEtcdHtppClientPut(t *testing.T) {
 		t.Error(err)
 	}
 }
+
+func TestEtcdHtppClientGet(t *testing.T) {
+	ht := NewHttpClient("192.168.33.10:2379")
+	value, err := ht.Get("hello")
+	if err != nil {
+		t.Error(err)
+	}
+	t.Log(value)
+}
