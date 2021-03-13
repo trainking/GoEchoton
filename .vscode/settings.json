@@ -1,0 +1,6 @@
+{
+    "go.generateTestsFlags": [
+        "-v"
+    ],
+    "go.testFlags": ["-v"]
+}
