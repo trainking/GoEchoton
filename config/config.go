@@ -18,9 +18,6 @@ type Yml struct {
 		Host   string `yaml:"host"`
 		Port   int    `yaml:"port"`
 	}
-	Server struct {
-		Port int `yaml:"port"`
-	}
 	Redis struct {
 		Host   string `yaml:"host"`
 		Passwd string `yaml:"passwd"`

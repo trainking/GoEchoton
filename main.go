@@ -1,32 +1,18 @@
 package main
 
 import (
-	"GoEchoton/pkg/etcd"
+	"GoEchoton/bootstrap"
 	"flag"
-	"fmt"
 )
 
 func main() {
 
 	// 获取参数配置
-	// var port int
-	// flag.IntVar(&port, "port", Config.Server.Port, "linsten port")
-	// flag.Parse()
-
-	// s := bootstrap.NewServer()
-	// s.Start(port)
-
-	var etcdGateway string
-	flag.StringVar(&etcdGateway, "etcd", "", "etcd gateway")
+	var port int
+	flag.IntVar(&port, "port", 1323, "linsten port")
 	flag.Parse()
 
-	if etcdGateway == "" {
-		panic("need a etcd gateway!")
-	}
+	s := bootstrap.NewServer()
+	s.Start(port)
 
-	v, err := etcd.Version(etcdGateway)
-	if err != nil {
-		fmt.Printf("error:%s\n", err.Error())
-	}
-	fmt.Println(v)
 }
