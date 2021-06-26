@@ -4,10 +4,13 @@ import (
 	"bytes"
 	"context"
 	"crypto/md5"
+	"crypto/tls"
+	"encoding/xml"
 	"errors"
 	"fmt"
 	"io"
 	"math/rand"
+	"net/http"
 	"sort"
 
 	"github.com/go-resty/resty/v2"
@@ -67,13 +70,47 @@ func NewClient(conf Config) (Client, error) {
 		return nil, errors.New("secret_key is must be")
 	}
 
-	return &defaultClient{conf: conf, httpClient: resty.New()}, nil
+	// 设置证书
+	cert, err := tls.LoadX509KeyPair(conf.CertPemPath, conf.CertKeyPemPath)
+	if err != nil {
+		return nil, err
+	}
+	httpClient := resty.New()
+	httpClient.SetCertificates(cert)
+
+	return &defaultClient{conf: conf, httpClient: httpClient}, nil
 }
 
 // CompayToUserCoin 企业付款到个人零钱
 func (c *defaultClient) CompayToUserCoin(ctx context.Context, params CompayToUserCoinParams) (*CompayToUserCoinResult, error) {
+	values := c.conf.getValues()
+	for k, v := range params.getValues() {
+		values[k] = v
+	}
+	values["nonce_str"] = c.generateNonceStr()
+	sign, err := c.signurate(values, c.conf.SecretKey)
+	if err != nil {
+		return nil, err
+	}
+	values["sign"] = sign
 
-	return nil, nil
+	// send to wechatpay
+	request := c.httpClient.R()
+	request = request.SetHeader("Content-Type", "application/xml")
+	request = request.SetBody(values)
+	response, err := request.Post("https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers")
+	if err != nil {
+		return nil, err
+	}
+	if response.StatusCode() != http.StatusOK {
+		return nil, fmt.Errorf("CompayToUserCoin send Failed! Code: %d", response.StatusCode())
+	}
+
+	var result CompayToUserCoinResult
+	if err := xml.Unmarshal(response.Body(), &result); err != nil {
+		return nil, err
+	}
+	return &result, nil
 }
 
 // generateNonceStr 随机产生32位随机字符串

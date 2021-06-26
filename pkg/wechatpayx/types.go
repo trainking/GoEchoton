@@ -1,12 +1,15 @@
 package wechatpayx
 
+import "strconv"
+
 // Config 基本配置
 type Config struct {
-	MchAppid   string `json:"mch_appid"`   // 申请商户号的appid或商户号绑定的appid
-	Mchid      string `json:"mchid"`       // 微信支付分配的商户号
-	DeviceInfo string `json:"device_info"` // 微信支付分配的终端设备号, 可无
-	SecretKey  string `json:"secret_key"`  // 签名密钥
-	// TODO 证书的路径
+	MchAppid       string `json:"mch_appid"`   // 申请商户号的appid或商户号绑定的appid
+	Mchid          string `json:"mchid"`       // 微信支付分配的商户号
+	DeviceInfo     string `json:"device_info"` // 微信支付分配的终端设备号, 可无
+	SecretKey      string `json:"secret_key"`  // 签名密钥
+	CertPemPath    string `json:"-"`           // 证书所在路径
+	CertKeyPemPath string `json:"-"`           // 证书密钥所在路径
 }
 
 // CompayToUserCoinParams 企业付款到零钱参数
@@ -34,4 +37,34 @@ type CompayToUserCoinResult struct {
 	PartnerTradNo string `json:"partner_trade_no"` // 商户订单号，需保持唯一性
 	PaymentNo     string `json:"payment_no"`       // 付款成功，微信付款单号
 	PaymentTime   string `json:"payment_time"`     // 付款成功时间
+}
+
+// getValues 转换类型
+func (c *Config) getValues() map[string]string {
+	var values = make(map[string]string)
+
+	values["mch_appid"] = c.MchAppid
+	values["mchid"] = c.Mchid
+	if c.DeviceInfo != "" {
+		values["device_info"] = c.DeviceInfo
+	}
+	return values
+}
+
+// getValues 转换类型
+func (p *CompayToUserCoinParams) getValues() map[string]string {
+	var values = make(map[string]string)
+
+	values["partner_trade_no"] = p.PartnerTradNo
+	values["openid"] = p.Openid
+	values["check_name"] = p.CheckName
+	if p.CheckName == "FORCE_CHECK" {
+		values["re_user_name"] = p.ReUserName
+	}
+	values["amount"] = strconv.FormatInt(p.Amount, 10)
+	values["desc"] = p.Desc
+	if p.SpbillCreateIp != "" {
+		values["spbill_create_ip"] = p.SpbillCreateIp
+	}
+	return values
 }
