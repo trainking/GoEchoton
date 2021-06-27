@@ -124,7 +124,7 @@ func (c *defaultClient) CompayToUserCoin(ctx context.Context, params CompayToUse
 // generateNonceStr 随机产生32位随机字符串
 func (c *defaultClient) generateNonceStr() string {
 	n := rand.Intn(32)
-	if n == 0 {
+	if n < 10 {
 		n = 10
 	}
 	b := make([]byte, n)

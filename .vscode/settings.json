@@ -1,0 +1,8 @@
+{
+    "go.liveErrors": {
+
+        "enabled": false,
+        "delay": 500
+    },
+    "go.testFlags": ["-v"]
+}
