@@ -121,6 +121,46 @@ func (c *defaultClient) CompayToUserCoin(ctx context.Context, params CompayToUse
 	return &result, nil
 }
 
+// GetTransferInfo 查询付款单
+func (c *defaultClient) GetTransferInfo(ctx context.Context, partner_trade_no, mch_id, appid string) (*GetTransferInfoResult, error) {
+	var values = make(map[string]string)
+
+	values["partner_trade_no"] = partner_trade_no
+	values["mch_id"] = mch_id
+	values["appid"] = appid
+	values["nonce_str"] = c.generateNonceStr()
+	sign, err := c.signurate(values, c.conf.SecretKey)
+	if err != nil {
+		return nil, err
+	}
+	values["sign"] = sign
+
+	// send to wechatpay
+	request := c.httpClient.R()
+	request = request.SetHeader("Content-Type", "application/xml")
+	request = request.SetBody(values)
+	response, err := request.Post("https://api.mch.weixin.qq.com/mmpaymkttransfers/gettransferinfo")
+	if err != nil {
+		return nil, err
+	}
+	if response.StatusCode() != http.StatusOK {
+		return nil, fmt.Errorf("GetTransferInfo send Failed! Code: %d", response.StatusCode())
+	}
+	var result GetTransferInfoResult
+	if err := xml.Unmarshal(response.Body(), &result); err != nil {
+		return nil, err
+	}
+	// 检查通信是否成功
+	if result.ReturnCode == ReturnCodeFail {
+		return nil, fmt.Errorf("Wechatpay Error: %s", result.ReturnMsg)
+	}
+	// 检查支付是否成功
+	if result.ResultCode == ReturnCodeFail {
+		return nil, fmt.Errorf("Wechatpay Error: %s", result.ReturnMsg)
+	}
+	return &result, nil
+}
+
 // generateNonceStr 随机产生32位随机字符串
 func (c *defaultClient) generateNonceStr() string {
 	n := rand.Intn(32)

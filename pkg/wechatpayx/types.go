@@ -23,20 +23,42 @@ type CompayToUserCoinParams struct {
 	SpbillCreateIp string `json:"spbill_create_ip"` // 用户的ip
 }
 
+// Result 标准返回结果
+type Result struct {
+	ReturnCode string `json:"return_code"`  // SUCCESS/FAIL 这个字段表示通信成功与否
+	ReturnMsg  string `json:"return_msg"`   // 通信错误返回信息
+	ResultCode string `json:"result_code"`  // SUCCESS/FAIL
+	ErrCode    string `json:"err_code"`     // 错误码信息
+	ErrCodeDes string `json:"err_code_des"` // 结果信息描述
+}
+
 // CompayToUserCoinResult 企业付款到零钱返回结果
 type CompayToUserCoinResult struct {
-	ReturnCode    string `json:"return_code"`      // SUCCESS/FAIL 这个字段表示通信成功与否
-	ReturnMsg     string `json:"return_msg"`       // 通信错误返回信息
+	Result
 	MchAppid      string `json:"mch_appid"`        // 申请商户号的appid或商户号绑定的appid
 	Mchid         string `json:"mchid"`            // 微信支付分配的商户号
 	DeviceInfo    string `json:"device_info"`      // 微信支付分配的终端设备号, 可无
 	NonceStr      string `json:"nonce_str"`        // 随机字符串，不长于32位
-	ResultCode    string `json:"result_code"`      // SUCCESS/FAIL
-	ErrCode       string `json:"err_code"`         // 错误码信息
-	ErrCodeDes    string `json:"err_code_des"`     // 结果信息描述
 	PartnerTradNo string `json:"partner_trade_no"` // 商户订单号，需保持唯一性
 	PaymentNo     string `json:"payment_no"`       // 付款成功，微信付款单号
 	PaymentTime   string `json:"payment_time"`     // 付款成功时间
+}
+
+// GetTransferInfoResult 查询付款订单
+type GetTransferInfoResult struct {
+	Result
+	PartnerTradNo string `json:"partner_trade_no"` // 商户订单号，需保持唯一性
+	MchAppid      string `json:"appid"`            // 申请商户号的appid或商户号绑定的appid
+	Mchid         string `json:"mch_id"`           // 微信支付分配的商户号
+	DetailId      string `json:"detail_id"`        // 调用付款API时，微信系统内部产生的单号
+	Status        string `json:"status"`           // SUCCESS:转账成功 FAILED:转账失败 PROCESSING:处理中
+	Reason        string `json:"reason"`           // 如果失败则有失败原因
+	Openid        string `json:"openid"`           // 商户appid下，某用户的openid
+	TransferName  string `json:"transfer_name"`    // 收款用户姓名
+	PaymentAmount int64  `json:"payment_amount"`   // 付款金额单位为“分”
+	TransferTime  string `json:"transfer_time"`    // 发起转账的时间
+	PaymentTime   string `json:"payment_time"`     // 付款成功时间
+	Desc          string `json:"desc"`             // 付款备注
 }
 
 // getValues 转换类型
