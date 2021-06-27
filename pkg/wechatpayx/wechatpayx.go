@@ -110,6 +110,14 @@ func (c *defaultClient) CompayToUserCoin(ctx context.Context, params CompayToUse
 	if err := xml.Unmarshal(response.Body(), &result); err != nil {
 		return nil, err
 	}
+	// 检查通信是否成功
+	if result.ReturnCode == ReturnCodeFail {
+		return nil, fmt.Errorf("Wechatpay Error: %s", result.ReturnMsg)
+	}
+	// 检查支付是否成功
+	if result.ResultCode == ReturnCodeFail {
+		return nil, fmt.Errorf("Wechatpay Error: %s", result.ReturnMsg)
+	}
 	return &result, nil
 }
 
