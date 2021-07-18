@@ -6,11 +6,9 @@ import (
 	"GoEchoton/repository"
 	"io"
 	"os"
-	"reflect"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	jsoniter "github.com/json-iterator/go"
 	"github.com/labstack/echo/v4"
 )
 
@@ -20,20 +18,26 @@ var User = user{}
 
 // Index 首页Index
 func (_ user) Index(c echo.Context) error {
-	var json = jsoniter.ConfigCompatibleWithStandardLibrary
-	data := map[string]interface{}{
-		"state": 1,
-	}
-	d, err := json.Marshal(&data)
-	if err != nil {
-		return err
-	}
-	var p map[string]interface{}
-	json.Unmarshal(d, &p)
-	r := reflect.ValueOf(p["state"])
+	// var json = jsoniter.ConfigCompatibleWithStandardLibrary
+	// data := map[string]interface{}{
+	// 	"state": 1,
+	// }
+	// d, err := json.Marshal(&data)
+	// if err != nil {
+	// 	return err
+	// }
+	// var p map[string]interface{}
+	// json.Unmarshal(d, &p)
+	// r := reflect.ValueOf(p["state"])
+	name := c.Request().Header.Get("X-Auth-User")
 	return Response(c, map[string]interface{}{
-		"say": r.Kind().String(),
+		"say": "hello, " + name,
 	})
+}
+
+func (user) Auth(c echo.Context) error {
+	c.Response().Header().Set("X-Auth-User", "张三")
+	return Response(c)
 }
 
 // Login 登陆
