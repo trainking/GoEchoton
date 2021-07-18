@@ -47,6 +47,15 @@ type CompayToUserCoinResult struct {
 	PaymentTime   string `json:"payment_time" xml:"payment_time"`         // 付款成功时间
 }
 
+// GetTransferInfoParams 查询付款单请求
+type GetTransferInfoParams struct {
+	PartnerTradNo string `json:"partner_trade_no" xml:"partner_trade_no"` // 商户订单号，需保持唯一性
+	Mchid         string `json:"mch_id" xml:"mch_id"`                     // 商户号
+	Appid         string `json:"appid" xml:"appid"`                       // appid
+	NonceStr      string `json:"nonce_str" xml:"nonce_str"`               // 随机字符串
+	Sign          string `json:"sign" xml:"sign"`                         // 签名
+}
+
 // GetTransferInfoResult 查询付款订单
 type GetTransferInfoResult struct {
 	Result
@@ -84,5 +93,15 @@ func (p *CompayToUserCoinParams) getValues() map[string]string {
 	if p.SpbillCreateIp != "" {
 		values["spbill_create_ip"] = p.SpbillCreateIp
 	}
+	return values
+}
+
+func (g *GetTransferInfoParams) getValues() map[string]string {
+	var values = make(map[string]string)
+
+	values["partner_trade_no"] = g.PartnerTradNo
+	values["mch_id"] = g.Mchid
+	values["appid"] = g.Appid
+	values["nonce_str"] = g.NonceStr
 	return values
 }

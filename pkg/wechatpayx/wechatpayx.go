@@ -123,23 +123,19 @@ func (c *defaultClient) CompayToUserCoin(ctx context.Context, params CompayToUse
 }
 
 // GetTransferInfo 查询付款单
-func (c *defaultClient) GetTransferInfo(ctx context.Context, partner_trade_no, mch_id, appid string) (*GetTransferInfoResult, error) {
-	var values = make(map[string]string)
-
-	values["partner_trade_no"] = partner_trade_no
-	values["mch_id"] = mch_id
-	values["appid"] = appid
-	values["nonce_str"] = c.generateNonceStr()
+func (c *defaultClient) GetTransferInfo(ctx context.Context, params GetTransferInfoParams) (*GetTransferInfoResult, error) {
+	params.NonceStr = c.generateNonceStr()
+	values := params.getValues()
 	sign, err := c.signurate(values, c.conf.SecretKey)
 	if err != nil {
 		return nil, err
 	}
-	values["sign"] = sign
+	params.Sign = sign
 
 	// send to wechatpay
 	request := c.httpClient.R()
 	request = request.SetHeader("Content-Type", "application/xml")
-	request = request.SetBody(values)
+	request = request.SetBody(params)
 	response, err := request.Post("https://api.mch.weixin.qq.com/mmpaymkttransfers/gettransferinfo")
 	if err != nil {
 		return nil, err
