@@ -83,21 +83,22 @@ func NewClient(conf Config) (Client, error) {
 
 // CompayToUserCoin 企业付款到个人零钱
 func (c *defaultClient) CompayToUserCoin(ctx context.Context, params CompayToUserCoinParams) (*CompayToUserCoinResult, error) {
-	values := c.conf.getValues()
-	for k, v := range params.getValues() {
-		values[k] = v
-	}
-	values["nonce_str"] = c.generateNonceStr()
+	params.MchAppid = c.conf.MchAppid
+	params.Mchid = c.conf.Mchid
+	params.DeviceInfo = c.conf.DeviceInfo
+	params.NonceStr = c.generateNonceStr()
+
+	values := params.getValues()
 	sign, err := c.signurate(values, c.conf.SecretKey)
 	if err != nil {
 		return nil, err
 	}
-	values["sign"] = sign
+	params.Sign = sign
 
 	// send to wechatpay
 	request := c.httpClient.R()
 	request = request.SetHeader("Content-Type", "application/xml")
-	request = request.SetBody(values)
+	request = request.SetBody(params)
 	response, err := request.Post("https://api.mch.weixin.qq.com/mmpaymkttransfers/promotion/transfers")
 	if err != nil {
 		return nil, err
