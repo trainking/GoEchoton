@@ -7,6 +7,7 @@
 		- [3.1 灵活的配置路由](#31-灵活的配置路由)
 		- [3.2 Arpc的连接池](#32-arpc的连接池)
 		- [3.3 参数验证器](#33-参数验证器)
+		- [3.4 自定义工具包](#34-自定义工具包)
 	- [4. 说明](#4-说明)
 
 ## 1. 概述
@@ -83,6 +84,16 @@ defer this.Release(client)
 ```
 c.Validate(&param)
 ```
+
+### 3.4 自定义工具包
+
+- ~~`pkg/aprcpool` arpc的连接池~~
+- `pkg/cache` 内存缓存
+- `pkg/etcd` Etcd http客户端
+- `pkg/flatbuf` flatbuffer解析
+- `pkg/sqlt` sql生成模板
+- `pkg/upload` 文件上传示例
+- `pkg/wechatpayx` 微信支付实现
 
 
 ## 4. 说明

@@ -8,6 +8,7 @@ require (
 	github.com/go-redis/redis/v8 v8.4.4
 	github.com/go-resty/resty/v2 v2.6.0
 	github.com/go-sql-driver/mysql v1.5.0
+	github.com/google/flatbuffers v2.0.0+incompatible
 	github.com/json-iterator/go v1.1.10
 	github.com/klauspost/compress v1.11.12 // indirect
 	github.com/labstack/echo/v4 v4.1.17
