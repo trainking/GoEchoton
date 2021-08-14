@@ -13,7 +13,7 @@ require (
 	github.com/klauspost/compress v1.11.12 // indirect
 	github.com/labstack/echo/v4 v4.1.17
 	github.com/lesismal/arpc v1.1.0
-	github.com/streadway/amqp v1.0.0 // indirect
+	github.com/streadway/amqp v1.0.0
 	github.com/valyala/fasthttp v1.22.0
 	go.mongodb.org/mongo-driver v1.4.4
 	gopkg.in/yaml.v2 v2.3.0
