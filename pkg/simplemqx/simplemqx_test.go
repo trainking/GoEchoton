@@ -22,8 +22,10 @@ func TestCustme(t *testing.T) {
 		t.Error(err)
 	}
 
-	q.Cousume(func(b []byte) error {
+	if err := q.Cousume(func(b []byte) error {
 		fmt.Println(string(b))
 		return nil
-	})
+	}); err != nil {
+		t.Error(err)
+	}
 }
