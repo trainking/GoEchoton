@@ -9,4 +9,5 @@ require (
 	github.com/labstack/echo v3.3.10+incompatible
 	github.com/labstack/echo/v4 v4.6.1
 	gopkg.in/yaml.v2 v2.2.2
+	honnef.co/go/tools v0.2.2
 )

@@ -11,6 +11,7 @@ type Server struct {
 	e             *echo.Echo
 	routers       []Router
 	groups        []Group
+	middlewares   []echo.MiddlewareFunc
 	validator     *StructValidator
 	ValidatorList map[string]validator.Func
 }
@@ -55,14 +56,22 @@ func (s *Server) Start(listenAddr string) {
 	s.e.Use(middleware.Logger())
 	s.e.Use(middleware.Recover())
 	s.e.Use(middleware.CORS())
+	// 额外增加的全局中间件
+	for _, m := range s.middlewares {
+		s.e.Use(m)
+	}
 
 	s.e.Logger.Fatal(s.e.Start(listenAddr))
 }
 
 // New 新建服务
-func New() *Server {
+func New(svcCtx ServerContext) *Server {
 	return &Server{
-		e:         echo.New(),
-		validator: NewStructValidator(),
+		e:             echo.New(),
+		routers:       svcCtx.GetRouters(),
+		groups:        svcCtx.GetGroups(),
+		middlewares:   svcCtx.GetMiddlewares(),
+		ValidatorList: svcCtx.GetValidators(),
+		validator:     NewStructValidator(),
 	}
 }
