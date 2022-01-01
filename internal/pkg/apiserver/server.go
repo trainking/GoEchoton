@@ -56,7 +56,7 @@ func (s *Server) Start(listenAddr string) {
 	s.e.Use(middleware.Recover())
 	s.e.Use(middleware.CORS())
 
-	s.e.Logger.Fatal(listenAddr)
+	s.e.Logger.Fatal(s.e.Start(listenAddr))
 }
 
 // New 新建服务
