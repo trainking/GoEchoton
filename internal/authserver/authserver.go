@@ -14,7 +14,11 @@ var listenAddr = flag.String("addr", ":5050", "listen address")
 func main() {
 	flag.Parse()
 
-	svcCtx := svc.New(&config.Config{})
+	var conf config.Config
+	if err := apiserver.LoadConfigFile("./configs/authserver.yaml", &conf); err != nil {
+		panic(err)
+	}
+	svcCtx := svc.New(&conf)
 	server := apiserver.New(svcCtx)
 	server.Start(*listenAddr)
 }
