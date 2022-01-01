@@ -14,6 +14,9 @@ type (
 		// BindAndValidate 绑定数据并验证
 		BindAndValidate(i interface{}) error
 
+		// GetCtx 获取Echo的context
+		GetCtx() echo.Context
+
 		// ErrResponse 错误返回
 		ErrResponse(code int32, msg string) error
 
@@ -41,6 +44,11 @@ func (c *defaultContext) BindAndValidate(i interface{}) error {
 		return err
 	}
 	return nil
+}
+
+// GetCtx 获取Echo的context
+func (c *defaultContext) GetCtx() echo.Context {
+	return c.ctx
 }
 
 // ErrResponse 错误返回 `{"code": 1, "msg": "error is ..."}`
