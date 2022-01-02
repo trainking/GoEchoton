@@ -1,8 +1,12 @@
 package login
 
 import (
-	"GoEchoton/internal/authserver/types"
+	"GoEchoton/internal/authserver/apply"
+	"GoEchoton/internal/authserver/reply"
 	"GoEchoton/internal/pkg/apiserver"
+	"GoEchoton/internal/userrpc/types"
+	"GoEchoton/internal/userrpc/userclient"
+	"context"
 
 	"github.com/labstack/echo/v4"
 )
@@ -17,11 +21,19 @@ func New() *Login {
 //LoginOne 登录第一步
 func (l *Login) LoginOne(c echo.Context) error {
 	ctx := apiserver.NewContext(c)
-	var p types.LoginOneApply
+	var p apply.LoginOneApply
 
 	if err := ctx.BindAndValidate(&p); err != nil {
 		return ctx.ErrResponse(1, err.Error())
 	}
 
-	return ctx.Response(types.LoginOneReply{})
+	// 检查密码
+	if err := userclient.NewUserRpc("127.0.0.1:8080").CheckPasswd(context.Background(), &types.CheckPasswd{
+		Account:  p.Account,
+		Password: p.Password,
+	}); err != nil {
+		return ctx.ErrResponse(1, err.Error())
+	}
+
+	return ctx.Response(reply.LoginOneReply{})
 }

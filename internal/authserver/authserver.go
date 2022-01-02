@@ -15,9 +15,9 @@ func main() {
 	flag.Parse()
 
 	var conf config.Config
-	if err := apiserver.LoadConfigFile("./configs/authserver.yaml", &conf); err != nil {
-		panic(err)
-	}
+	// if err := apiserver.LoadConfigFile("./configs/authserver.yaml", &conf); err != nil {
+	// 	panic(err)
+	// }
 	svcCtx := svc.New(&conf)
 	server := apiserver.New(svcCtx)
 	server.Start(*listenAddr)

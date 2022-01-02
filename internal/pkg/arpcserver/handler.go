@@ -19,6 +19,9 @@ func Handle(f HandlerFunc) arpc.HandlerFunc {
 				panic(err)
 			}
 		} else {
+			if _r.Data == nil {
+				_r.Data = struct{}{}
+			}
 			if err := ctx.Write(_r.Data); err != nil {
 				panic(err)
 			}

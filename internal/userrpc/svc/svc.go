@@ -2,9 +2,8 @@ package svc
 
 import (
 	"GoEchoton/internal/pkg/arpcserver"
+	"GoEchoton/internal/userrpc/handler"
 	"GoEchoton/internal/userrpc/types"
-
-	"github.com/lesismal/arpc"
 )
 
 type SvcContext struct {
@@ -18,14 +17,8 @@ func New() arpcserver.ServerContext {
 func (s *SvcContext) GetHandlers() []arpcserver.Handler {
 	return []arpcserver.Handler{
 		{
-			Path: types.UserCheckPasswdPath,
-			Handle: func(ctx *arpc.Context) *arpcserver.Result {
-				var p types.CheckPasswdApply
-				if err := ctx.Bind(&p); err != nil {
-					return &arpcserver.Result{Err: err}
-				}
-				return &arpcserver.Result{}
-			},
+			Path:   types.UserCheckPasswdPath,
+			Handle: handler.UserCheckPasswd,
 		},
 	}
 }

@@ -21,6 +21,6 @@ func NewUserRpc(listenAddr string) types.UserRpc {
 }
 
 // CheckPasswd 检查密码
-func (u *userRpc) CheckPasswd(ctx context.Context, p *types.CheckPasswdApply) error {
+func (u *userRpc) CheckPasswd(ctx context.Context, p *types.CheckPasswd) error {
 	return u.client.C().CallWith(ctx, types.UserCheckPasswdPath, p, &struct{}{})
 }
