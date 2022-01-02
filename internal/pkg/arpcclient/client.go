@@ -52,8 +52,7 @@ func (c *Client) DeleteClientPool(listenAddr string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	delete(c.pools, listenAddr)
-	c.length--
-	keys := make([]string, c.length)
+	keys := make([]string, len(c.pools))
 
 	j := 0
 	for k := range c.pools {
@@ -61,6 +60,7 @@ func (c *Client) DeleteClientPool(listenAddr string) {
 		j++
 	}
 	c.addrs = keys
+	c.length = j
 }
 
 // C 返回客户端实例
