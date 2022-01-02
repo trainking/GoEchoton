@@ -6,12 +6,15 @@ import (
 	"flag"
 )
 
-var listenAddr = flag.String("addr", ":8080", "listen address")
+var listenAddr = flag.String("addr", ":8001", "listen address")
 
 func main() {
 	flag.Parse()
 	svcCtx := svc.New()
 	server := arpcserver.New(svcCtx)
 
-	server.Strart(*listenAddr)
+	// 注册服务
+	server.RegisterToEtcd("/user.rpc/", *listenAddr, []string{"127.0.0.1:2379"})
+
+	server.Start(*listenAddr)
 }

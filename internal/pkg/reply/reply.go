@@ -10,7 +10,7 @@ type PageListReply struct {
 
 // SumPageList 带有小计和总计分页列表
 type SumPageListReply struct {
-	PageList
+	PageListReply
 	SubTotal interface{} `json:"subtotal"` // 小计
 	AllTotal interface{} `json:"alltotal"` // 总计
 }
