@@ -1,8 +1,8 @@
 package userclient
 
 import (
-	"GoEchoton/internal/pkg/arpcclient"
 	"GoEchoton/internal/userrpc/types"
+	"GoEchoton/pkg/arpcclient"
 	"context"
 )
 

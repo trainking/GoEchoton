@@ -2,7 +2,7 @@ package main
 
 import (
 	"GoEchoton/internal/authserver/svc"
-	"GoEchoton/internal/pkg/apiserver"
+	"GoEchoton/pkg/apiserver"
 	"flag"
 
 	"honnef.co/go/tools/config"

@@ -3,9 +3,9 @@ package login
 import (
 	"GoEchoton/internal/authserver/apply"
 	"GoEchoton/internal/authserver/reply"
-	"GoEchoton/internal/pkg/apiserver"
 	"GoEchoton/internal/userrpc/types"
 	"GoEchoton/internal/userrpc/userclient"
+	"GoEchoton/pkg/apiserver"
 	"context"
 
 	"github.com/labstack/echo/v4"

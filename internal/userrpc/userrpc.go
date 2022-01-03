@@ -1,9 +1,9 @@
 package main
 
 import (
-	"GoEchoton/internal/pkg/arpcserver"
 	"GoEchoton/internal/userrpc/svc"
 	"GoEchoton/internal/userrpc/types"
+	"GoEchoton/pkg/arpcserver"
 	"flag"
 	"strings"
 )

@@ -1,9 +1,9 @@
 package svc
 
 import (
-	"GoEchoton/internal/pkg/arpcserver"
 	"GoEchoton/internal/userrpc/handler"
 	"GoEchoton/internal/userrpc/types"
+	"GoEchoton/pkg/arpcserver"
 )
 
 type SvcContext struct {

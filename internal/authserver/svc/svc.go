@@ -2,7 +2,7 @@ package svc
 
 import (
 	"GoEchoton/internal/authserver/api/login"
-	"GoEchoton/internal/pkg/apiserver"
+	"GoEchoton/pkg/apiserver"
 	"net/http"
 
 	"github.com/go-playground/validator/v10"
