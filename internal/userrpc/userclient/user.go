@@ -7,11 +7,11 @@ import (
 )
 
 type userRpc struct {
-	client *arpcclient.Client
+	client *arpcclient.ClientEtcdPod
 }
 
-func NewUserRpc(listenAddr string) types.UserRpc {
-	client, err := arpcclient.New(listenAddr, 2)
+func NewUserRpc(etcdGateway []string) types.UserRpc {
+	client, err := arpcclient.NewClientPool(types.UserRpcTarget, etcdGateway)
 	if err != nil {
 		panic(err)
 	}
@@ -22,5 +22,5 @@ func NewUserRpc(listenAddr string) types.UserRpc {
 
 // CheckPasswd 检查密码
 func (u *userRpc) CheckPasswd(ctx context.Context, p *types.CheckPasswd) error {
-	return u.client.C().CallWith(ctx, types.UserCheckPasswdPath, p, &struct{}{})
+	return u.client.GetNode().CallWith(ctx, types.UserCheckPasswdPath, p, &struct{}{})
 }

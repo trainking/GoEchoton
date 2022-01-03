@@ -41,18 +41,18 @@ func NewClientPool(target string, etcdGateWay []string) (*ClientEtcdPod, error) 
 }
 
 // GetNode 获取一个节点
-func (ce *ClientEtcdPod) GetNode() (*arpc.Client, error) {
+func (ce *ClientEtcdPod) GetNode() *arpc.Client {
 	if ce.length == 0 {
 		nodes := ce.rempod.GetNodes()
 		if len(nodes) > 0 {
 			for _, v := range nodes {
 				if err := ce.AddClientPool(v, ce.size); err != nil {
-					return nil, err
+					panic(err)
 				}
 			}
 		}
 	}
-	return ce.C(), nil
+	return ce.C()
 }
 
 // SetPoolSize 设置池的大小

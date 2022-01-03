@@ -72,7 +72,11 @@ func NewRemotePod(target string, etcdGateway []string) (*RemotePod, error) {
 	if err != nil {
 		return nil, err
 	}
-	r := &RemotePod{client: client, target: target}
+	r := &RemotePod{
+		client: client,
+		target: target,
+		nodes:  make(map[string]string),
+	}
 	// 获取所有node
 	if err := r.getNodes(); err != nil {
 		return nil, err

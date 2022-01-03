@@ -4,7 +4,6 @@ import (
 	"GoEchoton/internal/authserver/apply"
 	"GoEchoton/internal/authserver/reply"
 	"GoEchoton/internal/userrpc/types"
-	"GoEchoton/internal/userrpc/userclient"
 	"GoEchoton/pkg/apiserver"
 	"context"
 
@@ -12,10 +11,13 @@ import (
 )
 
 type Login struct {
+	userRpc types.UserRpc
 }
 
-func New() *Login {
-	return &Login{}
+func New(userRpc types.UserRpc) *Login {
+	return &Login{
+		userRpc: userRpc,
+	}
 }
 
 //LoginOne 登录第一步
@@ -28,7 +30,7 @@ func (l *Login) LoginOne(c echo.Context) error {
 	}
 
 	// 检查密码
-	if err := userclient.NewUserRpc("127.0.0.1:8080").CheckPasswd(context.Background(), &types.CheckPasswd{
+	if err := l.userRpc.CheckPasswd(context.Background(), &types.CheckPasswd{
 		Account:  p.Account,
 		Password: p.Password,
 	}); err != nil {
