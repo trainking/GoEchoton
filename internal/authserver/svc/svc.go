@@ -6,10 +6,13 @@ import (
 	"GoEchoton/pkg/apiserver"
 	"net/http"
 
+	"GoEchoton/internal/authserver/config"
+
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
-	"honnef.co/go/tools/config"
 )
+
+const AuthServerConfigEtcdPath = "/authserver/config"
 
 type SvcContext struct {
 	conf        *config.Config
