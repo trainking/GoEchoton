@@ -14,26 +14,28 @@ import (
 type SvcContext struct {
 	conf        *config.Config
 	etcdGateway []string
+
+	// api 对象
+	loginApi login.LoginApi
 }
 
 func New(conf *config.Config, etcdGateway []string) apiserver.ServerContext {
 	return &SvcContext{
 		conf:        conf,
 		etcdGateway: etcdGateway,
+
+		loginApi: login.New(userclient.NewUserRpc(etcdGateway)),
 	}
 }
 
 //GetRouters 获取顶级路由
 func (s *SvcContext) GetRouters() []apiserver.Router {
-	// 初始化
-	loginApi := login.New(userclient.NewUserRpc(s.etcdGateway))
-
 	return []apiserver.Router{
 		{
 			Method:  http.MethodPost,
 			Path:    "/v1/login/one",
 			Name:    "登录第一步",
-			Handler: loginApi.LoginOne,
+			Handler: s.loginApi.LoginOne,
 		},
 	}
 }
