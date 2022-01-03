@@ -1,14 +1,11 @@
 package arpcserver
 
 import (
-	"context"
-	"fmt"
-	"time"
+	"GoEchoton/pkg/etcdx"
 
 	"github.com/lesismal/arpc"
 	"github.com/lesismal/arpc/extension/middleware/router"
-	"go.etcd.io/etcd/api/v3/v3rpc/rpctypes"
-	clientv3 "go.etcd.io/etcd/client/v3"
+	"github.com/lesismal/arpc/log"
 )
 
 type Server struct {
@@ -25,40 +22,11 @@ func New(svcCtx ServerContext) *Server {
 
 // RegisterToEtcd 注册服务到Etcd
 func (s *Server) RegisterToEtcd(target string, value string, etcdGateway []string) {
-	client, err := clientv3.New(clientv3.Config{
-		Endpoints:   etcdGateway,
-		DialTimeout: 5 * time.Second,
-	})
-	if err != nil {
+	if err := etcdx.LeaseAndHeartbeat(target, value, etcdGateway, 10, 1); err != nil {
+		log.Error(`Rgister Error: %s, Etcd: %v`, err.Error(), etcdGateway)
 		panic(err)
 	}
-
-	kv := clientv3.NewKV(client)
-	lease := clientv3.NewLease(client)
-	var leaseID clientv3.LeaseID = 0
-
-	go func() {
-		defer client.Close()
-		for {
-			if leaseID == 0 {
-				leaseResp, err := lease.Grant(context.TODO(), 10)
-				if err != nil {
-					panic(err)
-				}
-				key := target + fmt.Sprintf("%d", leaseResp.ID)
-				if _, err := kv.Put(context.TODO(), key, value, clientv3.WithLease(leaseResp.ID)); err != nil {
-					panic(err)
-				}
-				leaseID = leaseResp.ID
-			} else {
-				if _, err := lease.KeepAliveOnce(context.TODO(), leaseID); err == rpctypes.ErrLeaseNotFound {
-					leaseID = 0
-					continue
-				}
-			}
-			time.Sleep(1 * time.Second)
-		}
-	}()
+	log.Info(`Register Etcd: %v %s-%s`, etcdGateway, target, value)
 }
 
 // Start 启动

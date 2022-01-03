@@ -1,100 +1,66 @@
 # GoEchoton - 标准api项目示范
 
+- [GoEchoton - 标准api项目示范](#goechoton---标准api项目示范)
+  - [概述](#概述)
+  - [项目规范](#项目规范)
+    - [目录](#目录)
+    - [规范](#规范)
+  - [包实现](#包实现)
+
 ## 概述
 
 构造Api项目开发规范
 
-## 项目结构
+## 项目规范
+
+### 目录
 
 ```
-
-├── api
-│   ├── openapi
-│   └── swagger
-├── build
-│   ├── ci
-│   ├── docker
-│   │   ├── iam-apiserver
-│   │   ├── iam-authz-server
-│   │   └── iam-pump
-│   ├── package
-├── CHANGELOG
-├── cmd
-│   ├── iam-apiserver
-│   │   └── apiserver.go
-│   ├── iam-authz-server
-│   │   └── authzserver.go
-│   ├── iamctl
-│   │   └── iamctl.go
-│   └── iam-pump
-│       └── pump.go
-├── configs
-├── CONTRIBUTING.md
-├── deployments
-├── docs
-│   ├── devel
-│   │   ├── en-US
-│   │   └── zh-CN
-│   ├── guide
-│   │   ├── en-US
-│   │   └── zh-CN
-│   ├── images
-│   └── README.md
-├── examples
-├── githooks
-├── go.mod
-├── go.sum
-├── init
-├── internal
-│   ├── apiserver
-│   │   ├── api
-│   │   │   └── v1
-│   │   │       └── user
-│   │   ├── apiserver.go
-│   │   ├── options
-│   │   ├── service
-│   │   ├── store
-│   │   │   ├── mysql
-│   │   │   ├── fake
-│   │   └── testing
-│   ├── authzserver
-│   │   ├── api
-│   │   │   └── v1
-│   │   │       └── authorize
-│   │   ├── options
-│   │   ├── store
-│   │   └── testing
-│   ├── iamctl
-│   │   ├── cmd
-│   │   │   ├── completion
-│   │   │   ├── user
-│   │   └── util
-│   ├── pkg
-│   │   ├── code
-│   │   ├── options
-│   │   ├── server
-│   │   ├── util
-│   │   └── validation
-├── LICENSE
-├── Makefile
-├── _output
-│   ├── platforms
-│   │   └── linux
-│   │       └── amd64
-├── pkg
-│   ├── util
-│   │   └── genutil
-├── README.md
-├── scripts
-│   ├── lib
-│   ├── make-rules
-├── test
-│   ├── testdata
-├── third_party
-│   └── forked
-└── tools
+├─configs
+├─docs
+│  ├─devel
+│  │  └─zh-CN
+│  ├─guide
+│  │  ├─en-US
+│  │  └─zh-CN
+│  │      ├─api
+│  │      └─apiserver
+│  └─images
+├─internal
+│  ├─authserver
+│  │  ├─api
+│  │  │  └─login
+│  │  ├─apply
+│  │  ├─config
+│  │  ├─reply
+│  │  └─svc
+│  ├─pkg
+│  │  ├─apply
+│  │  └─reply
+│  └─userrpc
+│      ├─handler
+│      ├─service
+│      ├─svc
+│      ├─types
+│      └─userclient
+│-pkg
+│   ├─apiserver
+│   ├─arpcclient
+│   ├─arpcserver
+│   └─etcdx
+│-gitignore
+│-CHANGELOG
+│-go.mod
+│-Makefile
+└─README.md
 ```
+
+### 规范
+
+- [约束](./docs/devel/zh-CN/roule.md)
 
 ## 包实现
 
 - apiserver: 定义api服务器实践[apiserver](./docs/guide/zh-CN/apiserver/README.md)
+- arpcserver: 定义arpc服务器实践[arpcserver](./docs/guide/zh-CN/arpcserver/README.md)
+- arpcclient: 定义arpc客户端实践[arpcclient](./docs/guide/zh-CN/arpcclient/README.md)

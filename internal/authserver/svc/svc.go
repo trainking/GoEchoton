@@ -2,6 +2,7 @@ package svc
 
 import (
 	"GoEchoton/internal/authserver/api/login"
+	"GoEchoton/internal/userrpc/userclient"
 	"GoEchoton/pkg/apiserver"
 	"net/http"
 
@@ -11,18 +12,22 @@ import (
 )
 
 type SvcContext struct {
-	conf *config.Config
+	conf        *config.Config
+	etcdGateway []string
 }
 
-func New(conf *config.Config) apiserver.ServerContext {
+func New(conf *config.Config, etcdGateway []string) apiserver.ServerContext {
 	return &SvcContext{
-		conf: conf,
+		conf:        conf,
+		etcdGateway: etcdGateway,
 	}
 }
 
 //GetRouters 获取顶级路由
 func (s *SvcContext) GetRouters() []apiserver.Router {
-	loginApi := login.New()
+	// 初始化
+	loginApi := login.New(userclient.NewUserRpc(s.etcdGateway))
+
 	return []apiserver.Router{
 		{
 			Method:  http.MethodPost,

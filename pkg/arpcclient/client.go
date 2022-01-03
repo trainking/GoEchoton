@@ -23,14 +23,18 @@ type Client struct {
 // New 创建连接池
 func New(listenAddr string, size int) (*Client, error) {
 	_clientOnce.Do(func() {
-		pools := make(map[string]*arpc.ClientPool)
-		_clientIns = &Client{pools: pools, cp: NewDefaultClientPool()}
+		_clientIns = newClient()
 	})
 
 	if err := _clientIns.AddClientPool(listenAddr, size); err != nil {
 		return nil, err
 	}
 	return _clientIns, nil
+}
+
+func newClient() *Client {
+	pools := make(map[string]*arpc.ClientPool)
+	return &Client{pools: pools, cp: NewDefaultClientPool()}
 }
 
 // AddClientPool 增加客户端池
