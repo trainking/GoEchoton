@@ -10,18 +10,25 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-type Login struct {
-	userRpc types.UserRpc
-}
+type (
+	LoginApi interface {
+		// LoginOne 登录第一步
+		LoginOne(c echo.Context) error
+	}
 
-func New(userRpc types.UserRpc) *Login {
-	return &Login{
+	loginApi struct {
+		userRpc types.UserRpc
+	}
+)
+
+func New(userRpc types.UserRpc) LoginApi {
+	return &loginApi{
 		userRpc: userRpc,
 	}
 }
 
 //LoginOne 登录第一步
-func (l *Login) LoginOne(c echo.Context) error {
+func (l *loginApi) LoginOne(c echo.Context) error {
 	ctx := apiserver.NewContext(c)
 	var p apply.LoginOneApply
 

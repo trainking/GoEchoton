@@ -3,10 +3,11 @@ package main
 import (
 	"GoEchoton/internal/authserver/svc"
 	"GoEchoton/pkg/apiserver"
+	"GoEchoton/pkg/etcdx"
 	"flag"
 	"strings"
 
-	"honnef.co/go/tools/config"
+	"GoEchoton/internal/authserver/config"
 )
 
 // 监听地址
@@ -17,10 +18,13 @@ func main() {
 	flag.Parse()
 
 	var conf config.Config
-	// if err := apiserver.LoadConfigFile("./configs/authserver.yaml", &conf); err != nil {
-	// 	panic(err)
-	// }
-	svcCtx := svc.New(&conf, strings.Split(*etcdGateway, ","))
+	var gateway = strings.Split(*etcdGateway, ",")
+	clientx := etcdx.New(gateway)
+	if err := apiserver.LoadConfigEtcdX(svc.AuthServerConfigEtcdPath, clientx, &conf); err != nil {
+		panic(err)
+	}
+
+	svcCtx := svc.New(&conf, gateway)
 	server := apiserver.New(svcCtx)
 	server.Start(*listenAddr)
 }
