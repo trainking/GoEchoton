@@ -6,14 +6,12 @@ import (
 	"GoEchoton/internal/server/auth/reply"
 	"GoEchoton/pkg/apiserver"
 	"context"
-
-	"github.com/labstack/echo/v4"
 )
 
 type (
 	LoginApi interface {
 		// LoginOne 登录第一步
-		LoginOne(c echo.Context) error
+		LoginOne(ctx apiserver.Context) error
 	}
 
 	loginApi struct {
@@ -28,8 +26,7 @@ func New(userRpc userrpc.UserRpc) LoginApi {
 }
 
 //LoginOne 登录第一步
-func (l *loginApi) LoginOne(c echo.Context) error {
-	ctx := apiserver.NewContext(c)
+func (l *loginApi) LoginOne(ctx apiserver.Context) error {
 	var p apply.LoginOneApply
 
 	if err := ctx.BindAndValidate(&p); err != nil {
