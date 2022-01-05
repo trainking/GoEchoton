@@ -58,7 +58,7 @@ func (c *defaultContext) ErrResponse(code int32, msg string) error {
 
 // Response 正常返回 `{"code": 0, "msg": "ok", "data": ...}`
 func (c *defaultContext) Response(data interface{}) error {
-	return c.ctx.JSON(http.StatusOK, JsonResponse{Code: int32(ResponseOkCode), Msg: ResponseOkMsg})
+	return c.ctx.JSON(http.StatusOK, JsonResponse{Code: int32(ResponseOkCode), Msg: ResponseOkMsg, Data: data})
 }
 
 // NewContext 创建默认context
