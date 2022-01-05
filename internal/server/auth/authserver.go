@@ -1,13 +1,13 @@
 package main
 
 import (
-	"GoEchoton/internal/authserver/svc"
+	"GoEchoton/internal/server/auth/svc"
 	"GoEchoton/pkg/apiserver"
 	"GoEchoton/pkg/etcdx"
 	"flag"
 	"strings"
 
-	"GoEchoton/internal/authserver/config"
+	"GoEchoton/internal/server/auth/config"
 )
 
 // 监听地址

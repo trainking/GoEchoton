@@ -1,8 +1,8 @@
 package main
 
 import (
-	"GoEchoton/internal/userrpc/svc"
-	"GoEchoton/internal/userrpc/types"
+	"GoEchoton/internal/rpc/user/svc"
+	"GoEchoton/internal/rpc/user/userrpc"
 	"GoEchoton/pkg/arpcserver"
 	"flag"
 	"strings"
@@ -17,7 +17,7 @@ func main() {
 	server := arpcserver.New(svcCtx)
 
 	// 注册服务
-	server.RegisterToEtcd(types.UserRpcTarget, *listenAddr, strings.Split(*etcdGateway, ","))
+	server.RegisterToEtcd(userrpc.UserRpcTarget, *listenAddr, strings.Split(*etcdGateway, ","))
 
 	server.Start(*listenAddr)
 }

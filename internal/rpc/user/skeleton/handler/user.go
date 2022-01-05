@@ -1,8 +1,8 @@
 package handler
 
 import (
-	"GoEchoton/internal/userrpc/service"
-	"GoEchoton/internal/userrpc/types"
+	"GoEchoton/internal/rpc/user/skeleton/service"
+	"GoEchoton/internal/rpc/user/userrpc"
 	"GoEchoton/pkg/arpcserver"
 	"context"
 
@@ -11,7 +11,7 @@ import (
 
 // UserCheckPasswd 检查密码
 func UserCheckPasswd(ctx *arpc.Context) *arpcserver.Result {
-	var p types.CheckPasswd
+	var p userrpc.CheckPasswd
 	if err := ctx.Bind(&p); err != nil {
 		return &arpcserver.Result{Err: err}
 	}

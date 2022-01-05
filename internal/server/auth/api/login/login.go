@@ -1,9 +1,9 @@
 package login
 
 import (
-	"GoEchoton/internal/authserver/apply"
-	"GoEchoton/internal/authserver/reply"
-	"GoEchoton/internal/userrpc/types"
+	"GoEchoton/internal/rpc/user/userrpc"
+	"GoEchoton/internal/server/auth/apply"
+	"GoEchoton/internal/server/auth/reply"
 	"GoEchoton/pkg/apiserver"
 	"context"
 
@@ -17,11 +17,11 @@ type (
 	}
 
 	loginApi struct {
-		userRpc types.UserRpc
+		userRpc userrpc.UserRpc
 	}
 )
 
-func New(userRpc types.UserRpc) LoginApi {
+func New(userRpc userrpc.UserRpc) LoginApi {
 	return &loginApi{
 		userRpc: userRpc,
 	}
@@ -37,7 +37,7 @@ func (l *loginApi) LoginOne(c echo.Context) error {
 	}
 
 	// 检查密码
-	if err := l.userRpc.CheckPasswd(context.Background(), &types.CheckPasswd{
+	if err := l.userRpc.CheckPasswd(context.Background(), &userrpc.CheckPasswd{
 		Account:  p.Account,
 		Password: p.Password,
 	}); err != nil {
