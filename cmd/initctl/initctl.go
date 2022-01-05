@@ -1,11 +1,9 @@
 package main
 
 import (
-	"GoEchoton/pkg/etcdx"
-	"context"
+	"GoEchoton/cmd/initctl/options"
 	"flag"
 	"fmt"
-	"io/ioutil"
 	"strings"
 )
 
@@ -22,19 +20,9 @@ func main() {
 	case "":
 		fmt.Println("no options")
 	case "conf":
-		err = loadConfigToEtcd(strings.Split(*etcdGateway, ","), *withCongfigs, *etcdkey)
+		err = options.LoadConfigToEtcd(strings.Split(*etcdGateway, ","), *withCongfigs, *etcdkey)
 	}
 	if err != nil {
 		fmt.Printf("Error: %s\n", err.Error())
 	}
-}
-
-// loadConfigToEtcd 加载配置到Etcd中
-func loadConfigToEtcd(etcdGateway []string, withCongfigs, etcdkey string) error {
-	s, err := ioutil.ReadFile(withCongfigs)
-	if err != nil {
-		return err
-	}
-	c := etcdx.New(etcdGateway)
-	return c.Put(context.TODO(), etcdkey, string(s))
 }

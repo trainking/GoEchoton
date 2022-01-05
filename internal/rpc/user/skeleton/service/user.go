@@ -1,7 +1,7 @@
 package service
 
 import (
-	"GoEchoton/internal/userrpc/types"
+	"GoEchoton/internal/rpc/user/userrpc"
 	"context"
 	"sync"
 )
@@ -12,7 +12,7 @@ var _userServiceIns *UserService
 type UserService struct {
 }
 
-func NewUserService() types.UserRpc {
+func NewUserService() userrpc.UserRpc {
 	_userServiceOnce.Do(func() {
 		_userServiceIns = &UserService{}
 	})
@@ -20,7 +20,7 @@ func NewUserService() types.UserRpc {
 }
 
 // CheckPasswd 检查密码
-func (s *UserService) CheckPasswd(ctx context.Context, p *types.CheckPasswd) error {
+func (s *UserService) CheckPasswd(ctx context.Context, p *userrpc.CheckPasswd) error {
 	// TODO 业务代码
 	return nil
 }

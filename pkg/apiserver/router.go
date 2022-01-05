@@ -8,7 +8,7 @@ type (
 		Method     string
 		Path       string
 		Name       string
-		Handler    echo.HandlerFunc
+		Handler    HandlerFunc
 		Middlwares []echo.MiddlewareFunc
 	}
 
@@ -22,7 +22,7 @@ type (
 
 // Add 增加路由
 func (r Router) Add(e *echo.Echo) {
-	_r := e.Add(r.Method, r.Path, r.Handler, r.Middlwares...)
+	_r := e.Add(r.Method, r.Path, Handle(r.Handler), r.Middlwares...)
 	if r.Name != "" {
 		_r.Name = r.Name
 	}
@@ -35,7 +35,7 @@ func (g Group) Add(e *echo.Echo) {
 		_g.Use(_m)
 	}
 	for _, _r := range g.Routers {
-		_rr := _g.Add(_r.Method, _r.Path, _r.Handler, _r.Middlwares...)
+		_rr := _g.Add(_r.Method, _r.Path, Handle(_r.Handler), _r.Middlwares...)
 		if _r.Name != "" {
 			_rr.Name = _r.Name
 		}

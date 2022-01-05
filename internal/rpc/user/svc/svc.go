@@ -1,8 +1,8 @@
 package svc
 
 import (
-	"GoEchoton/internal/userrpc/handler"
-	"GoEchoton/internal/userrpc/types"
+	"GoEchoton/internal/rpc/user/skeleton/handler"
+	"GoEchoton/internal/rpc/user/userrpc"
 	"GoEchoton/pkg/arpcserver"
 )
 
@@ -17,7 +17,7 @@ func New() arpcserver.ServerContext {
 func (s *SvcContext) GetHandlers() []arpcserver.Handler {
 	return []arpcserver.Handler{
 		{
-			Path:   types.UserCheckPasswdPath,
+			Path:   userrpc.UserCheckPasswdPath,
 			Handle: handler.UserCheckPasswd,
 		},
 	}

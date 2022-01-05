@@ -1,35 +1,32 @@
 package login
 
 import (
-	"GoEchoton/internal/authserver/apply"
-	"GoEchoton/internal/authserver/reply"
-	"GoEchoton/internal/userrpc/types"
+	"GoEchoton/internal/rpc/user/userrpc"
+	"GoEchoton/internal/server/auth/apply"
+	"GoEchoton/internal/server/auth/reply"
 	"GoEchoton/pkg/apiserver"
 	"context"
-
-	"github.com/labstack/echo/v4"
 )
 
 type (
 	LoginApi interface {
 		// LoginOne 登录第一步
-		LoginOne(c echo.Context) error
+		LoginOne(ctx apiserver.Context) error
 	}
 
 	loginApi struct {
-		userRpc types.UserRpc
+		userRpc userrpc.UserRpc
 	}
 )
 
-func New(userRpc types.UserRpc) LoginApi {
+func New(userRpc userrpc.UserRpc) LoginApi {
 	return &loginApi{
 		userRpc: userRpc,
 	}
 }
 
 //LoginOne 登录第一步
-func (l *loginApi) LoginOne(c echo.Context) error {
-	ctx := apiserver.NewContext(c)
+func (l *loginApi) LoginOne(ctx apiserver.Context) error {
 	var p apply.LoginOneApply
 
 	if err := ctx.BindAndValidate(&p); err != nil {
@@ -37,7 +34,7 @@ func (l *loginApi) LoginOne(c echo.Context) error {
 	}
 
 	// 检查密码
-	if err := l.userRpc.CheckPasswd(context.Background(), &types.CheckPasswd{
+	if err := l.userRpc.CheckPasswd(context.Background(), &userrpc.CheckPasswd{
 		Account:  p.Account,
 		Password: p.Password,
 	}); err != nil {

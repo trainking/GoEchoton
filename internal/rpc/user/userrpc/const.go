@@ -1,4 +1,4 @@
-package types
+package userrpc
 
 const UserRpcTarget = "/user.rpc/"
 

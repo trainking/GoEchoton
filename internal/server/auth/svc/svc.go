@@ -1,12 +1,12 @@
 package svc
 
 import (
-	"GoEchoton/internal/authserver/api/login"
-	"GoEchoton/internal/userrpc/userclient"
+	"GoEchoton/internal/rpc/user/userstub"
+	"GoEchoton/internal/server/auth/api/login"
 	"GoEchoton/pkg/apiserver"
 	"net/http"
 
-	"GoEchoton/internal/authserver/config"
+	"GoEchoton/internal/server/auth/config"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -27,7 +27,7 @@ func New(conf *config.Config, etcdGateway []string) apiserver.ServerContext {
 		conf:        conf,
 		etcdGateway: etcdGateway,
 
-		loginApi: login.New(userclient.NewUserRpc(etcdGateway)),
+		loginApi: login.New(userstub.NewUserRpc(etcdGateway)),
 	}
 }
 
