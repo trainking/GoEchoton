@@ -23,7 +23,7 @@ func New(svcCtx ServerContext) *Server {
 // RegisterToEtcd 注册服务到Etcd
 func (s *Server) RegisterToEtcd(target string, value string, etcdGateway []string) {
 	if err := etcdx.LeaseAndHeartbeat(target, value, etcdGateway, 10, 1); err != nil {
-		log.Error(`Rgister Error: %s, Etcd: %v`, err.Error(), etcdGateway)
+		log.Error(`Register Error: %s, Etcd: %v`, err.Error(), etcdGateway)
 		panic(err)
 	}
 	log.Info(`Register Etcd: %v %s-%s`, etcdGateway, target, value)

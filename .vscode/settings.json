@@ -4,5 +4,12 @@
         "enabled": false,
         "delay": 500
     },
-    "go.testFlags": ["-v"]
+    "go.testFlags": [
+        "-v"
+    ],
+    "cSpell.words": [
+        "arpc",
+        "etcdx",
+        "lesismal"
+    ]
 }
