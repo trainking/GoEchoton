@@ -12,6 +12,8 @@ var withCongfigs = flag.String("configs", "", "configs path")
 var etcdkey = flag.String("etcdkey", "", "etcd key path")
 var etcdGateway = flag.String("etcd", "127.0.0.1:2379", "etcd endpoint to connect to")
 
+// conf: \initctl.go -option="conf" -configs="C:\\boxs\\centos-7.0\\GoEchoton\\configs\\authserver.yaml" -etcdkey="/authserver/config" -etcd="127.0.0.1:2379"
+
 func main() {
 	flag.Parse()
 
