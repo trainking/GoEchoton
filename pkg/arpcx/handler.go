@@ -1,4 +1,4 @@
-package arpcserver
+package arpcx
 
 import (
 	"github.com/lesismal/arpc"

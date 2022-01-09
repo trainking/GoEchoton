@@ -70,6 +70,5 @@
 
 ## 包实现
 
-- apiserver: 定义api服务器实践[apiserver](./docs/guide/zh-CN/apiserver/README.md)
-- arpcserver: 定义arpc服务器实践[arpcserver](./docs/guide/zh-CN/arpcserver/README.md)
-- arpcclient: 定义arpc客户端实践[arpcclient](./docs/guide/zh-CN/arpcclient/README.md)
+- apiserver: api服务器实践[apiserver](./docs/guide/zh-CN/apiserver/README.md)
+- arpcx: rpc实践[arpcx](./docs/guide/zh-CN/arpcx/README.md)

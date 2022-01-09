@@ -1,4 +1,4 @@
-package arpcclient
+package arpcx
 
 import (
 	"net"

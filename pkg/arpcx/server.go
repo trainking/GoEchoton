@@ -1,4 +1,4 @@
-package arpcserver
+package arpcx
 
 import (
 	"GoEchoton/pkg/etcdx"
@@ -13,7 +13,7 @@ type Server struct {
 	Handlers []Handler
 }
 
-func New(svcCtx ServerContext) *Server {
+func NewServer(svcCtx ServerContext) *Server {
 	return &Server{
 		server:   arpc.NewServer(),
 		Handlers: svcCtx.GetHandlers(),
