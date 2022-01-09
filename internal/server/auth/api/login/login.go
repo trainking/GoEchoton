@@ -16,12 +16,14 @@ type (
 
 	loginApi struct {
 		userRpc userrpc.UserRpc
+		logger  apiserver.Logger
 	}
 )
 
-func New(userRpc userrpc.UserRpc) LoginApi {
+func New(userRpc userrpc.UserRpc, logger apiserver.Logger) LoginApi {
 	return &loginApi{
 		userRpc: userRpc,
+		logger:  logger,
 	}
 }
 
@@ -32,6 +34,7 @@ func (l *loginApi) LoginOne(ctx apiserver.Context) error {
 	if err := ctx.BindAndValidate(&p); err != nil {
 		return ctx.ErrResponse(1, err.Error())
 	}
+	l.logger.Info("login one")
 
 	// 检查密码
 	if err := l.userRpc.CheckPasswd(context.Background(), &userrpc.CheckPasswd{

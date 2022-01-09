@@ -17,10 +17,11 @@ var etcdGateway = flag.String("etcd", "127.0.0.1:8001", "etcd gateway")
 func main() {
 	flag.Parse()
 
+	// 加载配置
 	var conf config.Config
 	var gateway = strings.Split(*etcdGateway, ",")
-	clientx := etcdx.New(gateway)
-	if err := apiserver.LoadConfigEtcdX(svc.AuthServerConfigEtcdPath, clientx, &conf); err != nil {
+	clientX := etcdx.New(gateway)
+	if err := apiserver.LoadConfigEtcdX(svc.AuthServerConfigEtcdPath, clientX, &conf); err != nil {
 		panic(err)
 	}
 

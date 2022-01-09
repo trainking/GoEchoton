@@ -9,7 +9,11 @@
     ],
     "cSpell.words": [
         "arpc",
+        "Debugf",
         "etcdx",
-        "lesismal"
+        "Infof",
+        "lesismal",
+        "Syncer",
+        "Warnf"
     ]
 }

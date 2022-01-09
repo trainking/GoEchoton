@@ -4,6 +4,7 @@ import (
 	"GoEchoton/internal/rpc/user/userstub"
 	"GoEchoton/internal/server/auth/api/login"
 	"GoEchoton/pkg/apiserver"
+	"GoEchoton/pkg/logger"
 	"net/http"
 
 	"GoEchoton/internal/server/auth/config"
@@ -15,6 +16,7 @@ import (
 const AuthServerConfigEtcdPath = "/authserver/config"
 
 type SvcContext struct {
+	apiserver.BaseServerContext
 	conf        *config.Config
 	etcdGateway []string
 
@@ -23,12 +25,18 @@ type SvcContext struct {
 }
 
 func New(conf *config.Config, etcdGateway []string) apiserver.ServerContext {
-	return &SvcContext{
+	svcContext := &SvcContext{
 		conf:        conf,
 		etcdGateway: etcdGateway,
-
-		loginApi: login.New(userstub.NewUserRpc(etcdGateway)),
 	}
+
+	var _logger apiserver.Logger = logger.New(conf.LoggerConfig)
+	svcContext.SetLogger(_logger)
+
+	// 加入API
+	svcContext.loginApi = login.New(userstub.NewUserRpc(etcdGateway), _logger)
+
+	return svcContext
 }
 
 //GetRouters 获取顶级路由
