@@ -2,16 +2,16 @@ package userstub
 
 import (
 	"GoEchoton/internal/rpc/user/userrpc"
-	"GoEchoton/pkg/arpcclient"
+	"GoEchoton/pkg/arpcx"
 	"context"
 )
 
 type userRpc struct {
-	client *arpcclient.ClientEtcdPod
+	client *arpcx.ClientEtcdPod
 }
 
 func NewUserRpc(etcdGateway []string) userrpc.UserRpc {
-	client, err := arpcclient.NewClientPool(userrpc.UserRpcTarget, etcdGateway)
+	client, err := arpcx.NewClientPool(userrpc.UserRpcTarget, etcdGateway)
 	if err != nil {
 		panic(err)
 	}

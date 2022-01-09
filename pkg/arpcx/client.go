@@ -1,4 +1,4 @@
-package arpcclient
+package arpcx
 
 import (
 	"sync"
@@ -21,7 +21,7 @@ type Client struct {
 }
 
 // New 创建连接池
-func New(listenAddr string, size int) (*Client, error) {
+func NewClient(listenAddr string, size int) (*Client, error) {
 	_clientOnce.Do(func() {
 		_clientIns = newClient()
 	})
