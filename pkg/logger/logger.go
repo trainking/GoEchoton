@@ -1,8 +1,6 @@
 package logger
 
 import (
-	"fmt"
-
 	"github.com/natefinch/lumberjack"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
@@ -16,35 +14,35 @@ type Logger struct {
 }
 
 func (l *Logger) Debug(args ...interface{}) {
-	l.sugar.Debug(args)
+	l.sugar.Debug(args...)
 }
 
 func (l *Logger) Debugf(format string, args ...interface{}) {
-	l.sugar.Debugf(format, args)
+	l.sugar.Debugf(format, args...)
 }
 
 func (l *Logger) Info(args ...interface{}) {
-	l.sugar.Info(args)
+	l.sugar.Info(args...)
 }
 
 func (l *Logger) Infof(format string, args ...interface{}) {
-	l.sugar.Info(format, args)
+	l.sugar.Infof(format, args...)
 }
 
 func (l *Logger) Warn(args ...interface{}) {
-	l.sugar.Warn(args)
+	l.sugar.Warn(args...)
 }
 
 func (l *Logger) Warnf(format string, args ...interface{}) {
-	l.sugar.Warnf(format, args)
+	l.sugar.Warnf(format, args...)
 }
 
 func (l *Logger) Error(args ...interface{}) {
-	l.sugar.Error(args)
+	l.sugar.Error(args...)
 }
 
 func (l *Logger) Errorf(format string, args ...interface{}) {
-	l.sugar.Errorf(format, args)
+	l.sugar.Errorf(format, args...)
 }
 
 // New 通过自定义输出流，限制文件输出大小控制
@@ -60,7 +58,7 @@ func New(c Config) *Logger {
 	encoder := getEncoder()
 
 	core := zapcore.NewCore(encoder, writeSyncer, getLevel(c.Level))
-	_logger := zap.New(core, zap.AddCaller(), zap.AddStacktrace(zap.WarnLevel), zap.Fields(zap.Field(zap.String("service_id", fmt.Sprintf("%s_%s", c.Target, c.ID)))))
+	_logger := zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1), zap.AddStacktrace(zap.WarnLevel), zap.Fields(zap.Field(zap.String("service_id", c.ServiceID()))))
 
 	zap.RedirectStdLog(_logger)
 
