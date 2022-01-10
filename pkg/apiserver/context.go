@@ -15,7 +15,7 @@ type (
 		BindAndValidate(i interface{}) error
 
 		// GetCtx 获取Echo的context
-		GetCtx() echo.Context
+		GetEchoContext() echo.Context
 
 		// ErrResponse 错误返回
 		ErrResponse(code int32, msg string) error
@@ -47,7 +47,7 @@ func (c *defaultContext) BindAndValidate(i interface{}) error {
 }
 
 // GetCtx 获取Echo的context
-func (c *defaultContext) GetCtx() echo.Context {
+func (c *defaultContext) GetEchoContext() echo.Context {
 	return c.ctx
 }
 
