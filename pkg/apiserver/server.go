@@ -56,6 +56,7 @@ func (s *Server) Start(listenAddr string) {
 	s.e.Use(middleware.Logger())
 	s.e.Use(middleware.Recover())
 	s.e.Use(middleware.CORS())
+	s.e.Use(middleware.RequestID())
 	// 额外增加的全局中间件
 	for _, m := range s.middlewares {
 		s.e.Use(m)
