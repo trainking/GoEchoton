@@ -2,6 +2,7 @@ package arpcx
 
 import (
 	"GoEchoton/pkg/etcdx"
+	"context"
 
 	"github.com/lesismal/arpc"
 )
@@ -53,6 +54,17 @@ func (ce *ClientEtcdPod) GetNode() *arpc.Client {
 		}
 	}
 	return ce.C()
+}
+
+func (ce *ClientEtcdPod) CallWith(ctx context.Context, method string, req interface{}, rsp interface{}) error {
+	resuestID := ctx.Value("REQUEST_ID")
+	var _req Request
+	if id, ok := resuestID.(string); ok {
+		_req.ID = id
+	}
+
+	_req.Data = req
+	return ce.GetNode().CallWith(ctx, method, &_req, &rsp)
 }
 
 // SetPoolSize 设置池的大小

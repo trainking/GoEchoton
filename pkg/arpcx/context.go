@@ -24,6 +24,11 @@ type (
 		Data interface{} `json:"data"`
 	}
 
+	Result struct {
+		Err  error
+		Data interface{}
+	}
+
 	defaultContext struct {
 		ctx *arpc.Context
 		req *Request
