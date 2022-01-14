@@ -22,5 +22,5 @@ func NewUserRpc(etcdGateway []string) userrpc.UserRpc {
 
 // CheckPasswd 检查密码
 func (u *userRpc) CheckPasswd(ctx context.Context, p *userrpc.CheckPasswd) error {
-	return u.client.GetNode().CallWith(ctx, userrpc.UserCheckPasswdPath, p, &struct{}{})
+	return u.client.CallWith(ctx, userrpc.UserCheckPasswdPath, p, &struct{}{})
 }
