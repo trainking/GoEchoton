@@ -1,4 +1,6 @@
 go.sum
 .vscode/*
 
+deployments/packet/*
+
 *.log
