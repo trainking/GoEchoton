@@ -4,7 +4,6 @@ import (
 	"GoEchoton/internal/rpc/user/skeleton/service"
 	"GoEchoton/internal/rpc/user/userrpc"
 	"GoEchoton/pkg/arpcx"
-	"context"
 )
 
 // UserCheckPasswd 检查密码
@@ -14,7 +13,7 @@ func UserCheckPasswd(ctx arpcx.Context) error {
 		return err
 	}
 
-	if err := service.NewUserService().CheckPasswd(context.Background(), &p); err != nil {
+	if err := service.NewUserService().CheckPasswd(ctx.GetContext(), &p); err != nil {
 		return err
 	}
 
