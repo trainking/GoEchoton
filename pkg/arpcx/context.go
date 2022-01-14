@@ -1,6 +1,7 @@
 package arpcx
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/lesismal/arpc"
@@ -17,16 +18,14 @@ type (
 
 		// Write 写入成功返回
 		Write(i ...interface{}) error
+
+		// GetContext 获取一个context.Context
+		GetContext() context.Context
 	}
 
 	Request struct {
 		ID   string      `json:"id"`
 		Data interface{} `json:"data"`
-	}
-
-	Result struct {
-		Err  error
-		Data interface{}
 	}
 
 	defaultContext struct {
@@ -69,4 +68,9 @@ func (c *defaultContext) Write(i ...interface{}) error {
 		panic("write more than one")
 	}
 	return c.ctx.Write(i[0])
+}
+
+// GetContext 获取一个context.Context
+func (c *defaultContext) GetContext() context.Context {
+	return c.ctx
 }
