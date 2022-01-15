@@ -2,7 +2,6 @@ package arpcx
 
 import (
 	"context"
-	"encoding/json"
 
 	"github.com/lesismal/arpc"
 )
@@ -23,40 +22,30 @@ type (
 		GetContext() context.Context
 	}
 
-	Request struct {
-		ID   string      `json:"id"`
-		Data interface{} `json:"data"`
-	}
-
 	defaultContext struct {
 		ctx *arpc.Context
-		req *Request
 	}
 )
 
 func NewContext(ctx *arpc.Context) Context {
-	var req Request
-	if err := ctx.Bind(&req); err != nil {
-		panic(err)
-	}
 	return &defaultContext{
 		ctx: ctx,
-		req: &req,
 	}
 }
 
 // GetRequestID 获取RequestID
 func (c *defaultContext) GetRequestID() string {
-	return c.req.ID
+	if id, ok := c.ctx.Get("REQUEST_ID"); ok {
+		if _ids, ok := id.(string); ok {
+			return _ids
+		}
+	}
+	return ""
 }
 
 // Bind 绑定数据
 func (c *defaultContext) Bind(i interface{}) error {
-	b, err := json.Marshal(c.req.Data)
-	if err != nil {
-		return err
-	}
-	return json.Unmarshal(b, i)
+	return c.ctx.Bind(i)
 }
 
 // Write 写出返回结果
