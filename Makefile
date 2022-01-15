@@ -7,6 +7,8 @@ CMD_PATH = ./cmd
 BIN_PATH = ./deployments/packet/bin
 
 init:
+	cp ./scripts/deploy/start_all.sh $(PACKET_PATH)/
+	cp ./scripts/deploy/stop_all.sh $(PACKET_PATH)/
 	go mod tidy
 
 userrpc:
