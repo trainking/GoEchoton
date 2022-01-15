@@ -19,6 +19,7 @@
 ├─cmd
 │  └─initctl
 ├─configs
+├─deployments
 ├─docs
 │  ├─devel
 │  │  └─zh-CN
