@@ -57,14 +57,15 @@ func (ce *ClientEtcdPod) GetNode() *arpc.Client {
 }
 
 func (ce *ClientEtcdPod) CallWith(ctx context.Context, method string, req interface{}, rsp interface{}) error {
+	client := ce.GetNode()
+
+	// 传递Request ID
 	resuestID := ctx.Value("REQUEST_ID")
-	var _req Request
 	if id, ok := resuestID.(string); ok {
-		_req.ID = id
+		client.Set("REQUEST_ID", id)
 	}
 
-	_req.Data = req
-	return ce.GetNode().CallWith(ctx, method, &_req, &rsp)
+	return client.CallWith(ctx, method, req, rsp)
 }
 
 // SetPoolSize 设置池的大小
