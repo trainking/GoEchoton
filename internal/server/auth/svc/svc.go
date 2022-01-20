@@ -8,6 +8,7 @@ import (
 	"net/http"
 
 	"GoEchoton/internal/server/auth/config"
+	authmiddle "GoEchoton/internal/server/auth/middleware"
 
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
@@ -57,7 +58,10 @@ func (s *SvcContext) GetGroups() []apiserver.Group {
 }
 
 func (s *SvcContext) GetMiddlewares() []echo.MiddlewareFunc {
-	return []echo.MiddlewareFunc{}
+	return []echo.MiddlewareFunc{
+		authmiddle.IpWhite(s.conf.IpWhiteList),
+		authmiddle.IpBlack(s.conf.IpBlackList),
+	}
 }
 
 // GetValidators 获取自定义验证器
