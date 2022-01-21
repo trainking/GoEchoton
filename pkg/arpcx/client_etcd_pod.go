@@ -26,16 +26,19 @@ func NewClientPool(target string, etcdGateWay []string) (*ClientEtcdPod, error) 
 		rempod: r,
 		size:   DefaultPoolSize,
 	}
+
 	c.Client = newClient()
+
+	c.Client.SetCodec(&MsgpackCodec{})
 
 	// 增加变更回调
 	c.rempod.SetOnAdd(func(v string) {
-		if err := c.AddClientPool(v, c.size); err != nil {
+		if err := c.AddNode(v, c.size); err != nil {
 			return
 		}
 	})
 	c.rempod.SetOnDelete(func(v string) {
-		c.DeleteClientPool(v)
+		c.DeleteNode(v)
 	})
 
 	return c, nil
@@ -47,7 +50,7 @@ func (ce *ClientEtcdPod) GetNode() *arpc.Client {
 		nodes := ce.rempod.GetNodes()
 		if len(nodes) > 0 {
 			for _, v := range nodes {
-				if err := ce.AddClientPool(v, ce.size); err != nil {
+				if err := ce.AddNode(v, ce.size); err != nil {
 					panic(err)
 				}
 			}

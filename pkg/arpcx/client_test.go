@@ -25,7 +25,7 @@ func TestAddClientPool(t *testing.T) {
 	pools := make(map[string]*arpc.ClientPool)
 	c := &Client{pools: pools, cp: NewFakeClientPool()}
 
-	if err := c.AddClientPool("127.0.0.1:80001", 2); err != nil {
+	if err := c.AddNode("127.0.0.1:80001", 2); err != nil {
 		t.Error(err)
 	}
 
@@ -43,7 +43,7 @@ func BenchmarkAddClientPool(b *testing.B) {
 	c := &Client{pools: pools, cp: NewFakeClientPool()}
 
 	for i := 0; i < b.N; i++ {
-		if err := c.AddClientPool(fmt.Sprintf("127.0.0.1:8000%d", i), 2); err != nil {
+		if err := c.AddNode(fmt.Sprintf("127.0.0.1:8000%d", i), 2); err != nil {
 			b.Error(err)
 		}
 	}
@@ -53,19 +53,19 @@ func TestDeleteClientPool(t *testing.T) {
 	pools := make(map[string]*arpc.ClientPool)
 	c := &Client{pools: pools, cp: NewFakeClientPool()}
 
-	if err := c.AddClientPool("127.0.0.1:80001", 2); err != nil {
+	if err := c.AddNode("127.0.0.1:80001", 2); err != nil {
 		t.Error(err)
 	}
 
-	if err := c.AddClientPool("127.0.0.1:80002", 2); err != nil {
+	if err := c.AddNode("127.0.0.1:80002", 2); err != nil {
 		t.Error(err)
 	}
 
-	if err := c.AddClientPool("127.0.0.1:80003", 2); err != nil {
+	if err := c.AddNode("127.0.0.1:80003", 2); err != nil {
 		t.Error(err)
 	}
 
-	c.DeleteClientPool("127.0.0.1:80001")
+	c.DeleteNode("127.0.0.1:80001")
 
 	if c.length != 2 {
 		t.Errorf("expected 2 client pools")
@@ -91,13 +91,13 @@ func BenchmarkDeleteClientPool(b *testing.B) {
 	for j := 0; j < 1000; j++ {
 		k := fmt.Sprintf("172.0.0.1:%d", j)
 		keys = append(keys, k)
-		if err := c.AddClientPool(k, 2); err != nil {
+		if err := c.AddNode(k, 2); err != nil {
 			b.Error(err)
 		}
 	}
 
 	for i := 0; i < b.N; i++ {
-		c.DeleteClientPool(keys[i%1000])
+		c.DeleteNode(keys[i%1000])
 	}
 
 }
