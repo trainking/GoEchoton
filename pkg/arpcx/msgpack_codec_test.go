@@ -43,7 +43,9 @@ func BenchmarkMsgpack(b *testing.B) {
 	// bt, _ := json.Marshal(p)
 
 	for n := 0; n < b.N; n++ {
-		m.Unmarshal(bt, &p)
+		if err := m.Unmarshal(bt, &p); err != nil {
+			b.Error(err)
+		}
 		// json.Unmarshal(bt, &p)
 	}
 }

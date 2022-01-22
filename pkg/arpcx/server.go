@@ -2,6 +2,7 @@ package arpcx
 
 import (
 	"GoEchoton/pkg/etcdx"
+	"time"
 
 	"github.com/lesismal/arpc"
 	"github.com/lesismal/arpc/extension/middleware/router"
@@ -22,7 +23,11 @@ func NewServer(svcCtx ServerContext) *Server {
 
 // RegisterToEtcd 注册服务到Etcd
 func (s *Server) RegisterToEtcd(target string, value string, etcdGateway []string) {
-	if err := etcdx.LeaseAndHeartbeat(target, value, etcdGateway, 10, 1); err != nil {
+	// 延迟注册，等待上一个租约过期，被客户端完全发现
+	time.Sleep(3 * time.Second)
+
+	// 注册到Etcd
+	if err := etcdx.LeaseAndHeartbeat(target, value, etcdGateway, 3, 1); err != nil {
 		log.Error(`Register Error: %s, Etcd: %v`, err.Error(), etcdGateway)
 		panic(err)
 	}

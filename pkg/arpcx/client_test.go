@@ -9,10 +9,6 @@ import (
 
 type FakeClientPool struct{}
 
-func NewFakeClientPool() ClientPool {
-	return &FakeClientPool{}
-}
-
 func (f *FakeClientPool) Create(listenAddr string, size int) (*arpc.ClientPool, error) {
 	return &arpc.ClientPool{}, nil
 }
@@ -23,7 +19,7 @@ func (f *FakeClientPool) Choose(p *arpc.ClientPool) *arpc.Client {
 
 func TestAddClientPool(t *testing.T) {
 	pools := make(map[string]*arpc.ClientPool)
-	c := &Client{pools: pools, cp: NewFakeClientPool()}
+	c := &Client{pools: pools}
 
 	if err := c.AddNode("127.0.0.1:80001", 2); err != nil {
 		t.Error(err)
@@ -40,7 +36,7 @@ func TestAddClientPool(t *testing.T) {
 
 func BenchmarkAddClientPool(b *testing.B) {
 	pools := make(map[string]*arpc.ClientPool)
-	c := &Client{pools: pools, cp: NewFakeClientPool()}
+	c := &Client{pools: pools}
 
 	for i := 0; i < b.N; i++ {
 		if err := c.AddNode(fmt.Sprintf("127.0.0.1:8000%d", i), 2); err != nil {
@@ -51,7 +47,7 @@ func BenchmarkAddClientPool(b *testing.B) {
 
 func TestDeleteClientPool(t *testing.T) {
 	pools := make(map[string]*arpc.ClientPool)
-	c := &Client{pools: pools, cp: NewFakeClientPool()}
+	c := &Client{pools: pools}
 
 	if err := c.AddNode("127.0.0.1:80001", 2); err != nil {
 		t.Error(err)
@@ -85,7 +81,7 @@ func TestDeleteClientPool(t *testing.T) {
 
 func BenchmarkDeleteClientPool(b *testing.B) {
 	pools := make(map[string]*arpc.ClientPool)
-	c := &Client{pools: pools, cp: NewFakeClientPool()}
+	c := &Client{pools: pools}
 
 	var keys []string
 	for j := 0; j < 1000; j++ {

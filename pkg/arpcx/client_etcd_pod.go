@@ -41,6 +41,11 @@ func NewClientPool(target string, etcdGateWay []string) (*ClientEtcdPod, error) 
 		c.DeleteNode(v)
 	})
 
+	// 初始化获取所有的节点
+	if err := c.rempod.InitNodes(); err != nil {
+		return nil, err
+	}
+
 	return c, nil
 }
 

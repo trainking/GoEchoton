@@ -18,8 +18,6 @@ type Client struct {
 
 	rk int
 
-	cp ClientPool
-
 	cc codec.Codec
 }
 
@@ -34,7 +32,7 @@ func NewClient() (*Client, error) {
 
 func newClient() *Client {
 	pools := make(map[string]*arpc.ClientPool)
-	return &Client{pools: pools, cp: NewDefaultClientPool()}
+	return &Client{pools: pools}
 }
 
 // SetCodec 设置客户端使用编码器
@@ -55,7 +53,7 @@ func (c *Client) Codec() (cc codec.Codec, ok bool) {
 // - listenAddr 以监听的节点地址作为节点映射
 // - size 节点应该有的tcp连接数
 func (c *Client) AddNode(listenAddr string, size int) error {
-	pool, err := c.cp.Create(listenAddr, size)
+	pool, err := CreateArpcClientPool(listenAddr, size)
 	if err != nil {
 		return err
 	}
@@ -71,9 +69,15 @@ func (c *Client) AddNode(listenAddr string, size int) error {
 func (c *Client) DeleteNode(listenAddr string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	delete(c.pools, listenAddr)
-	keys := make([]string, len(c.pools))
+	if p, ok := c.pools[listenAddr]; !ok {
+		return
+	} else {
+		delete(c.pools, listenAddr)
+		p.Stop()
+	}
 
+	// 重置addrs和length
+	keys := make([]string, len(c.pools))
 	j := 0
 	for k := range c.pools {
 		keys[j] = k
@@ -89,7 +93,7 @@ func (c *Client) C() *arpc.Client {
 	pool := c.pools[c.addrs[(c.rk+1)%c.length]]
 	c.mu.RUnlock()
 
-	arpcClient := c.cp.Choose(pool)
+	arpcClient := pool.Next()
 
 	// 初始化arpc.Client的步骤
 	if cc, ok := c.Codec(); ok {

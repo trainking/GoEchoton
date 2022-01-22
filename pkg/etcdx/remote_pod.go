@@ -33,25 +33,25 @@ func NewRemotePod(target string, etcdGateway []string) (*RemotePod, error) {
 		target: target,
 		nodes:  make(map[string]string),
 	}
-	// 获取所有node
-	if err := r.getNodes(); err != nil {
-		return nil, err
-	}
+
 	// 监听变更
 	go r.watchUpdate()
 	return r, nil
 }
 
 // getNodes 获取所有节点
-func (r *RemotePod) getNodes() error {
+func (r *RemotePod) InitNodes() error {
 	kv := clientv3.NewKV(r.client)
 	rangeRsp, err := kv.Get(context.TODO(), r.target, clientv3.WithPrefix())
 	if err != nil {
 		return err
 	}
+
 	r.mu.Lock()
 	for _, kv := range rangeRsp.Kvs {
-		r.nodes[string(kv.Key)] = string(kv.Value)
+		v := string(kv.Value)
+		r.nodes[string(kv.Key)] = v
+		r.onAddd(v)
 	}
 	r.mu.Unlock()
 	return nil
@@ -72,8 +72,11 @@ func (r *RemotePod) watchUpdate() {
 				// 增加元素处理
 				r.onAddd(v)
 			case mvccpb.DELETE: // 有节点删除
-				delete(r.nodes, string(event.Kv.Key))
-				r.onDelete(string(event.Kv.Value))
+				k := string(event.Kv.Key)
+				if v, ok := r.nodes[k]; ok {
+					delete(r.nodes, k)
+					r.onDelete(v)
+				}
 			}
 			r.mu.Unlock()
 		}
