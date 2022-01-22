@@ -11,7 +11,7 @@ type (
 	}
 
 	CheckPasswd struct {
-		Account  string `json:"account"`
-		Password string `json:"password"`
+		Account  string `json:"account" msgpack:"account"`
+		Password string `json:"password" msgpack:"password"`
 	}
 )
