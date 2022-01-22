@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/lesismal/arpc"
+	"github.com/lesismal/arpc/codec"
 )
 
 var _clientOnce sync.Once
@@ -18,17 +19,16 @@ type Client struct {
 	rk int
 
 	cp ClientPool
+
+	cc codec.Codec
 }
 
 // New 创建连接池
-func NewClient(listenAddr string, size int) (*Client, error) {
+func NewClient() (*Client, error) {
 	_clientOnce.Do(func() {
 		_clientIns = newClient()
 	})
 
-	if err := _clientIns.AddClientPool(listenAddr, size); err != nil {
-		return nil, err
-	}
 	return _clientIns, nil
 }
 
@@ -37,8 +37,24 @@ func newClient() *Client {
 	return &Client{pools: pools, cp: NewDefaultClientPool()}
 }
 
-// AddClientPool 增加客户端池
-func (c *Client) AddClientPool(listenAddr string, size int) error {
+// SetCodec 设置客户端使用编码器
+// - link: https://github.com/lesismal/arpc#custom-codec
+func (c *Client) SetCodec(cc codec.Codec) {
+	c.cc = cc
+}
+
+// Codec 获取设置的编码器;如果未设置，则 ok 为false
+func (c *Client) Codec() (cc codec.Codec, ok bool) {
+	if c.cc != nil {
+		return c.cc, true
+	}
+	return nil, false
+}
+
+// AddNode 增加节点
+// - listenAddr 以监听的节点地址作为节点映射
+// - size 节点应该有的tcp连接数
+func (c *Client) AddNode(listenAddr string, size int) error {
 	pool, err := c.cp.Create(listenAddr, size)
 	if err != nil {
 		return err
@@ -51,8 +67,8 @@ func (c *Client) AddClientPool(listenAddr string, size int) error {
 	return nil
 }
 
-// DeleteClientPool 删除客户端池
-func (c *Client) DeleteClientPool(listenAddr string) {
+// DeleteNode 删除节点
+func (c *Client) DeleteNode(listenAddr string) {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	delete(c.pools, listenAddr)
@@ -72,5 +88,13 @@ func (c *Client) C() *arpc.Client {
 	c.mu.RLock()
 	pool := c.pools[c.addrs[(c.rk+1)%c.length]]
 	c.mu.RUnlock()
-	return c.cp.Choose(pool)
+
+	arpcClient := c.cp.Choose(pool)
+
+	// 初始化arpc.Client的步骤
+	if cc, ok := c.Codec(); ok {
+		arpcClient.Codec = cc
+	}
+
+	return arpcClient
 }

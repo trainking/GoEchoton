@@ -34,6 +34,7 @@ func (s *Server) Start(listenAddr string) {
 	// 全局中间件
 	s.server.Handler.Use(router.Recover())
 	s.server.Handler.Use(router.Logger())
+	s.server.Codec = &MsgpackCodec{}
 
 	// 加入调用
 	for _, h := range s.Handlers {

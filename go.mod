@@ -8,6 +8,7 @@ require (
 	github.com/lesismal/arpc v1.2.4
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/natefinch/lumberjack v2.0.0+incompatible
+	github.com/vmihailenco/msgpack/v5 v5.3.5
 	go.etcd.io/etcd/api/v3 v3.5.1
 	go.etcd.io/etcd/client/v3 v3.5.1
 	go.uber.org/zap v1.17.0
